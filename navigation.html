@@ -1,0 +1,90 @@
+<div class="container-fluid px-4 py-2">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('static_pages.index') }}">
+        <span class="fw-bold" style="color: var(--primary);">Reel Resume</span>
+    </a>
+    <button class="navbar-toggler border-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+            {% if current_user.is_authenticated %}
+                {% if current_user.user_type == 'employer' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('employer.dashboard') }}">Dashboard</a>
+                    </li>
+                {% else %}
+                    <!-- Jobseeker Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('jobseeker.dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="contentDropdown" role="button" data-bs-toggle="dropdown">
+                            Content
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('video.list_videos') }}">My Videos</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('playlist.list_playlists') }}">My Playlists</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('video.manage_tags') }}">Manage Tags</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('analytics.dashboard') }}">Analytics</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                            Admin
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('admin.list_users') }}">User Management</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('static_pages.employers') }}">For Employers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('static_pages.candidates') }}">For Candidates</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('static_pages.pricing') }}">Pricing</a>
+                </li>
+            {% endif %}
+        </ul>
+
+        <!-- User Menu -->
+        <ul class="navbar-nav align-items-center">
+            {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('messaging.inbox') }}">
+                        Messages
+                        {% if current_user.received_messages|selectattr('read', 'equalto', false)|list|length > 0 %}
+                            <span class="badge bg-danger">
+                                {{ current_user.received_messages|selectattr('read', 'equalto', false)|list|length }}
+                            </span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        Account
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('profile.setup') }}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
+                </li>
+                <li class="nav-item ms-2">
+                    <a class="btn btn-primary px-4" href="{{ url_for('auth.signup') }}">Sign Up</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Create professional video resumes with Reel Resume">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" as="style">
+    <link rel="preload" href="https://cdn.plyr.io/3.7.8/plyr.css" as="style">
+
+    <title>Reel Resume - {% block title %}{% endblock %}</title>
+
+    <!-- CSS -->
+    <link href="https://fonts.cdnfonts.com/css/graphik" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link href="{{ url_for('static', filename='css/modern.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+
+    <!-- Enhanced CSRF Protection -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            if (!csrfToken) {
+                console.error('CSRF token not found in meta tag');
+                return;
+            }
+
+            // Add CSRF token to all forms
+            document.querySelectorAll('form').forEach(form => {
+                if (!form.querySelector('input[name="csrf_token"]')) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'csrf_token';
+                    input.value = csrfToken;
+                    form.appendChild(input);
+                }
+            });
+
+            // Enhanced fetch request interceptor
+            const originalFetch = window.fetch;
+            window.fetch = function(url, options = {}) {
+                // Ensure headers object exists
+                options.headers = options.headers || {};
+
+                // Add security headers
+                options.headers['X-CSRFToken'] = csrfToken;
+                options.headers['X-Requested-With'] = 'XMLHttpRequest';
+                options.credentials = 'same-origin';
+
+                return originalFetch(url, options)
+                    .then(response => {
+                        if (response.status === 419 || response.status === 401) {
+                            return refreshCsrfToken().then(() => {
+                                // Retry the original request with new token
+                                options.headers['X-CSRFToken'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                                return originalFetch(url, options);
+                            });
+                        }
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error('Request failed:', error);
+                        throw error;
+                    });
+            };
+
+            // Function to refresh CSRF token
+            async function refreshCsrfToken() {
+                try {
+                    const response = await originalFetch('/auth/refresh-csrf', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': csrfToken
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const newToken = data.csrf_token;
+
+                        // Update meta tag
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', newToken);
+
+                        // Update all CSRF form inputs
+                        document.querySelectorAll('input[name="csrf_token"]').forEach(input => {
+                            input.value = newToken;
+                        });
+
+                        return newToken;
+                    }
+                    throw new Error('Failed to refresh CSRF token');
+                } catch (error) {
+                    console.error('Failed to refresh CSRF token:', error);
+                    // Reload page as fallback
+                    window.location.reload();
+                    throw error;
+                }
+            }
+
+            // Refresh token periodically (every 25 minutes)
+            setInterval(refreshCsrfToken, 1500000);
+
+            // Handle token expiration errors globally
+            window.addEventListener('unhandledrejection', function(event) {
+                if (event.reason && (event.reason.status === 419 || event.reason.status === 401)) {
+                    refreshCsrfToken().catch(() => window.location.reload());
+                }
+            });
+        });
+    </script>
+
+    {% block styles %}{% endblock %}
+</head>
+<body class="bg-background">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+        {% include 'navigation.html' %}
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="space-y-4 mb-8">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category else 'primary' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Page Content -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-5 bg-light border-top">
+        <div class="container">
+            <div class="row gy-4">
+                {% include 'footer.html' %}
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,118 @@
+<div class="col-lg-5 col-md-12 mb-4 mb-lg-0">
+    <div class="pe-lg-5">
+        <h5 class="h4 fw-bold mb-3" style="color: var(--primary);">Reel Resume</h5>
+        <p class="text-muted mb-4" style="font-size: 0.95rem;">Empowering job seekers with professional video resumes to stand out in the modern job market.</p>
+        <div class="social-links d-flex gap-3">
+            <a href="#" class="social-link" title="Follow us on LinkedIn">
+                <i class="bi bi-linkedin"></i>
+            </a>
+            <a href="#" class="social-link" title="Follow us on Twitter">
+                <i class="bi bi-twitter-x"></i>
+            </a>
+            <a href="#" class="social-link" title="Follow us on Instagram">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="#" class="social-link" title="Subscribe on YouTube">
+                <i class="bi bi-youtube"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="col-6 col-lg-2 col-md-3 mb-4">
+    <h6 class="text-uppercase fw-semibold mb-3 text-secondary">Product</h6>
+    <ul class="list-unstyled footer-links">
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.employers') }}" class="footer-link">For Employers</a>
+        </li>
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.candidates') }}" class="footer-link">For Candidates</a>
+        </li>
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.pricing') }}" class="footer-link">Pricing</a>
+        </li>
+    </ul>
+</div>
+
+<div class="col-6 col-lg-2 col-md-3 mb-4">
+    <h6 class="text-uppercase fw-semibold mb-3 text-secondary">Support</h6>
+    <ul class="list-unstyled footer-links">
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.help_center') }}" class="footer-link">Help Center</a>
+        </li>
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.contact') }}" class="footer-link">Contact Us</a>
+        </li>
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.faq') }}" class="footer-link">FAQ</a>
+        </li>
+        <li class="mb-2">
+            <a href="#" class="footer-link">Status</a>
+        </li>
+    </ul>
+</div>
+
+<div class="col-6 col-lg-2 col-md-3 mb-4">
+    <h6 class="text-uppercase fw-semibold mb-3 text-secondary">Legal</h6>
+    <ul class="list-unstyled footer-links">
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.terms') }}" class="footer-link">Terms of Service</a>
+        </li>
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.privacy') }}" class="footer-link">Privacy Policy</a>
+        </li>
+        <li class="mb-2">
+            <a href="{{ url_for('static_pages.cookie_policy') }}" class="footer-link">Cookie Policy</a>
+        </li>
+    </ul>
+</div>
+
+<div class="col-12">
+    <hr class="my-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <p class="text-muted mb-2 mb-md-0" style="font-size: 0.9rem;">
+            &copy; {{ now.year }} Reel Resume. All rights reserved.
+        </p>
+        <nav class="nav">
+            <a href="#" class="nav-link px-2 footer-link">Careers</a>
+            <a href="#" class="nav-link px-2 footer-link">Blog</a>
+            <a href="#" class="nav-link px-2 footer-link">Resources</a>
+        </nav>
+    </div>
+</div>
+
+<style>
+.footer-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.footer-link:hover {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--background-alt);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.social-link:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+</style>

@@ -1,0 +1,994 @@
+2024-12-22 14:40:39,197 ERROR: Exception on / [GET] [in /home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py:838]
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_cors/extension.py", line 194, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/routes/static_pages.py", line 9, in index
+    return render_template('index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/workspace/templates/index.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "/home/runner/workspace/templates/base.html", line 96, in top-level template code
+    {% include 'footer.html' %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/templates/footer.html", line 74, in top-level template code
+    &copy; {{ now.year }} Reel Resume. All rights reserved.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 487, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'now' is undefined
+2024-12-22 14:41:10,860 INFO: Application startup [in /home/runner/workspace/app.py:63]
+2024-12-22 14:41:56,413 INFO: Application startup [in /home/runner/workspace/app.py:63]
+2024-12-22 14:42:01,216 INFO: Application startup [in /home/runner/workspace/app.py:63]
+2024-12-22 14:42:06,199 INFO: Application startup [in /home/runner/workspace/app.py:63]
+2024-12-22 14:42:06,199 INFO: Initializing database connection... [in /home/runner/workspace/app.py:69]
+2024-12-22 14:42:06,885 INFO: Database connection successful [in /home/runner/workspace/app.py:75]
+2024-12-22 14:42:06,886 INFO: All extensions initialized successfully [in /home/runner/workspace/app.py:91]
+2024-12-22 14:42:06,886 INFO: Initializing AI talent matching service... [in /home/runner/workspace/app.py:105]
+2024-12-22 14:42:06,889 INFO: AI talent matching service initialized successfully [in /home/runner/workspace/app.py:110]
+2024-12-22 14:42:06,893 INFO: Registered blueprint: auth with prefix: /auth [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,907 INFO: Registered blueprint: video with prefix: / [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,908 INFO: Registered blueprint: profile with prefix: /profile [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,909 INFO: Registered blueprint: analytics with prefix: /analytics [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,911 INFO: Registered blueprint: messaging with prefix: /messaging [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,915 INFO: Registered blueprint: static_pages with prefix: / [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,918 INFO: Registered blueprint: employer with prefix: /employer [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,919 INFO: Registered blueprint: jobseeker with prefix: /jobseeker [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,930 INFO: Registered blueprint: tutorial with prefix: /tutorial [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,933 INFO: Registered blueprint: admin with prefix: /admin [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,935 INFO: Registered blueprint: script with prefix: /script [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,937 INFO: Registered blueprint: resume_analysis with prefix: /api [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,945 INFO: Registered blueprint: playlist with prefix: /playlists [in /home/runner/workspace/app.py:217]
+2024-12-22 14:42:06,947 INFO: Registered blueprint: tags with prefix: /api [in /home/runner/workspace/app.py:217]
+2024-12-22 15:30:24,608 - __main__ - INFO - Starting application initialization
+2024-12-22 15:30:24,615 - __main__ - INFO - Initializing extensions...
+2024-12-22 15:30:24,665 - __main__ - INFO - All extensions initialized successfully
+2024-12-22 15:30:24,665 - __main__ - INFO - Testing database connection...
+2024-12-22 15:30:25,327 - __main__ - INFO - Database connection successful
+2024-12-22 15:30:26,320 - __main__ - INFO - Database tables created successfully
+2024-12-22 15:30:26,324 - __main__ - ERROR - Application context error: type object 'CSRFProtect' has no attribute 'error_handler'
+Traceback (most recent call last):
+  File "/home/runner/workspace/app.py", line 132, in create_app
+    @app.errorhandler(CSRFProtect.error_handler)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CSRFProtect' has no attribute 'error_handler'
+2024-12-22 15:30:26,362 - __main__ - ERROR - Critical error during app initialization: type object 'CSRFProtect' has no attribute 'error_handler'
+Traceback (most recent call last):
+  File "/home/runner/workspace/app.py", line 132, in create_app
+    @app.errorhandler(CSRFProtect.error_handler)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CSRFProtect' has no attribute 'error_handler'
+2024-12-22 15:30:26,363 - __main__ - ERROR - Fatal error starting application: type object 'CSRFProtect' has no attribute 'error_handler'
+Traceback (most recent call last):
+  File "/home/runner/workspace/app.py", line 227, in <module>
+    app = create_app()
+          ^^^^^^^^^^^^
+  File "/home/runner/workspace/app.py", line 132, in create_app
+    @app.errorhandler(CSRFProtect.error_handler)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CSRFProtect' has no attribute 'error_handler'
+2024-12-29 02:35:38,563 - __main__ - INFO - [app.py:38] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:35:38,571 - __main__ - INFO - [app.py:62] - Application configuration loaded successfully
+2024-12-29 02:35:38,571 - __main__ - INFO - [app.py:65] - Initializing Flask extensions...
+2024-12-29 02:35:38,614 - __main__ - INFO - [app.py:71] - Flask extensions initialized successfully
+2024-12-29 02:35:38,614 - __main__ - INFO - [app.py:142] - Registering application blueprints...
+2024-12-29 02:35:38,621 - __main__ - INFO - [app.py:149] - Application blueprints registered successfully
+2024-12-29 02:35:38,621 - __main__ - INFO - [app.py:177] - Application setup completed successfully
+2024-12-29 02:35:38,861 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140211358340480)
+2024-12-29 02:35:39,992 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140211358340480)
+2024-12-29 02:35:39,993 - __main__ - INFO - [app.py:189] - Database tables created successfully
+2024-12-29 02:35:40,961 - __main__ - INFO - [app.py:38] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:35:40,961 - __main__ - INFO - [app.py:62] - Application configuration loaded successfully
+2024-12-29 02:35:40,961 - __main__ - INFO - [app.py:65] - Initializing Flask extensions...
+2024-12-29 02:35:41,001 - __main__ - INFO - [app.py:71] - Flask extensions initialized successfully
+2024-12-29 02:35:41,001 - __main__ - INFO - [app.py:142] - Registering application blueprints...
+2024-12-29 02:35:41,008 - __main__ - INFO - [app.py:149] - Application blueprints registered successfully
+2024-12-29 02:35:41,009 - __main__ - INFO - [app.py:177] - Application setup completed successfully
+2024-12-29 02:35:41,238 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140122421040512)
+2024-12-29 02:35:42,312 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140122421040512)
+2024-12-29 02:35:42,313 - __main__ - INFO - [app.py:189] - Database tables created successfully
+2024-12-29 02:36:30,369 - __main__ - INFO - [app.py:38] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:36:30,369 - __main__ - INFO - [app.py:62] - Application configuration loaded successfully
+2024-12-29 02:36:30,369 - __main__ - INFO - [app.py:65] - Initializing Flask extensions...
+2024-12-29 02:36:30,414 - __main__ - INFO - [app.py:71] - Flask extensions initialized successfully
+2024-12-29 02:36:30,415 - __main__ - INFO - [app.py:142] - Registering application blueprints...
+2024-12-29 02:36:30,424 - __main__ - INFO - [app.py:149] - Application blueprints registered successfully
+2024-12-29 02:36:30,425 - __main__ - INFO - [app.py:177] - Application setup completed successfully
+2024-12-29 02:36:30,648 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140339659412864)
+2024-12-29 02:36:31,768 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140339659412864)
+2024-12-29 02:36:31,768 - __main__ - INFO - [app.py:189] - Database tables created successfully
+2024-12-29 02:38:11,079 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:38:11,082 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:38:11,082 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:38:11,083 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:38:11,143 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:38:11,144 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:38:11,153 - __main__ - INFO - [app.py:162] - Application blueprints registered successfully
+2024-12-29 02:38:11,424 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139903372874816)
+2024-12-29 02:38:11,850 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139903372874816)
+2024-12-29 02:38:11,850 - __main__ - INFO - [app.py:194] - Initial database connection test successful
+2024-12-29 02:38:11,850 - __main__ - INFO - [app.py:199] - Application setup completed successfully
+2024-12-29 02:38:12,679 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139903372874816)
+2024-12-29 02:38:12,679 - __main__ - INFO - [app.py:211] - Database tables created successfully
+2024-12-29 02:38:12,708 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:38:12,708 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:38:12,709 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:38:13,613 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:38:13,616 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:38:13,616 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:38:13,616 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:38:13,679 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:38:13,680 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:38:13,687 - __main__ - INFO - [app.py:162] - Application blueprints registered successfully
+2024-12-29 02:38:13,917 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139752077759552)
+2024-12-29 02:38:14,339 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139752077759552)
+2024-12-29 02:38:14,339 - __main__ - INFO - [app.py:194] - Initial database connection test successful
+2024-12-29 02:38:14,339 - __main__ - INFO - [app.py:199] - Application setup completed successfully
+2024-12-29 02:38:15,161 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139752077759552)
+2024-12-29 02:38:15,161 - __main__ - INFO - [app.py:211] - Database tables created successfully
+2024-12-29 02:38:15,201 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:38:15,201 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:38:15,202 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:38:15,745 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:38:15,748 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:38:15,748 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:38:15,749 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:38:15,810 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:38:15,812 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:38:15,830 - __main__ - INFO - [app.py:162] - Application blueprints registered successfully
+2024-12-29 02:38:16,061 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140643930510400)
+2024-12-29 02:38:16,483 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:16,483 - __main__ - INFO - [app.py:194] - Initial database connection test successful
+2024-12-29 02:38:16,483 - __main__ - INFO - [app.py:199] - Application setup completed successfully
+2024-12-29 02:38:17,305 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:17,305 - __main__ - INFO - [app.py:211] - Database tables created successfully
+2024-12-29 02:38:17,332 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:38:17,335 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 247-734-690
+2024-12-29 02:38:17,393 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:38:17,394 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:17,398 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:38:17,399 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:17,536 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:17,572 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:17,598 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:17,600 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:17] "GET / HTTP/1.1" 200 -
+2024-12-29 02:38:17,635 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:17] "GET /static/css/modern.css HTTP/1.1" 200 -
+2024-12-29 02:38:17,654 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:17] "GET /static/css/custom.css HTTP/1.1" 200 -
+2024-12-29 02:38:17,681 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140643930520960)
+2024-12-29 02:38:17,789 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:17,823 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930520960)
+2024-12-29 02:38:17,824 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:17,825 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:17] "GET / HTTP/1.1" 200 -
+2024-12-29 02:38:34,928 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:38:34,928 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:35,068 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:35,104 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:35,105 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:35,106 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:35] "GET / HTTP/1.1" 200 -
+2024-12-29 02:38:35,192 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:35] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:35,237 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:35] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:36,224 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:36,359 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:36,393 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930520960)
+2024-12-29 02:38:36,402 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:36,403 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:36] "GET /employers HTTP/1.1" 200 -
+2024-12-29 02:38:36,474 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:36] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:36,503 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:36] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:36,516 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:36] "[36mGET /static/images/video-resume-illustration.svg HTTP/1.1[0m" 304 -
+2024-12-29 02:38:36,974 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:37,113 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:37,148 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:37,153 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:37,154 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "GET /candidates HTTP/1.1" 200 -
+2024-12-29 02:38:37,224 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:37,232 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:37,278 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "[36mGET /static/images/video-resume-illustration.svg HTTP/1.1[0m" 304 -
+2024-12-29 02:38:37,606 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:37,741 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:37,775 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930520960)
+2024-12-29 02:38:37,783 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:37,784 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "GET /pricing HTTP/1.1" 200 -
+2024-12-29 02:38:37,857 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:37,872 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:37] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:38,748 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:38,889 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:38,923 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:38,926 - routes.auth - INFO - [auth.py:29] - Rendering login page
+2024-12-29 02:38:38,937 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:38:38,940 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:38] "GET /auth/login HTTP/1.1" 200 -
+2024-12-29 02:38:39,031 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:39] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:39,044 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:39] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:44,234 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:44,369 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:44,405 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930520960)
+2024-12-29 02:38:44,406 - routes.auth - INFO - [auth.py:33] - Processing login request
+2024-12-29 02:38:45,199 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:45,339 - routes.auth - INFO - [auth.py:76] - User 7 logged in successfully
+2024-12-29 02:38:45,374 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930520960)
+2024-12-29 02:38:45,374 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:45] "POST /auth/login HTTP/1.1" 200 -
+2024-12-29 02:38:45,436 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:38:45,578 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:38:45,614 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930510400)
+2024-12-29 02:38:45,759 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 7
+2024-12-29 02:38:45,833 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140643930520960)
+2024-12-29 02:38:45,846 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:45] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:38:45,982 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:45] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:38:45,991 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:45] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:38:46,057 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:38:46] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:38:56,633 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:38:56,635 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:38:56,635 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:38:56,635 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:38:56,684 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:38:56,684 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:38:56,690 - __main__ - INFO - [app.py:162] - Application blueprints registered successfully
+2024-12-29 02:38:56,915 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139848885851200)
+2024-12-29 02:38:57,344 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139848885851200)
+2024-12-29 02:38:57,344 - __main__ - INFO - [app.py:194] - Initial database connection test successful
+2024-12-29 02:38:57,345 - __main__ - INFO - [app.py:199] - Application setup completed successfully
+2024-12-29 02:38:58,179 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139848885851200)
+2024-12-29 02:38:58,179 - __main__ - INFO - [app.py:211] - Database tables created successfully
+2024-12-29 02:38:58,220 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:38:58,220 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:38:58,221 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:38:58,851 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:38:58,853 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:38:58,853 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:38:58,853 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:38:58,905 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:38:58,905 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:38:58,912 - __main__ - INFO - [app.py:162] - Application blueprints registered successfully
+2024-12-29 02:38:59,128 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139888417821760)
+2024-12-29 02:38:59,556 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139888417821760)
+2024-12-29 02:38:59,557 - __main__ - INFO - [app.py:194] - Initial database connection test successful
+2024-12-29 02:38:59,557 - __main__ - INFO - [app.py:199] - Application setup completed successfully
+2024-12-29 02:39:00,367 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139888417821760)
+2024-12-29 02:39:00,367 - __main__ - INFO - [app.py:211] - Database tables created successfully
+2024-12-29 02:39:00,389 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:39:00,392 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 671-041-719
+2024-12-29 02:39:00,445 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:39:00,445 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:39:00,583 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:39:00,619 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139888417821760)
+2024-12-29 02:39:00,667 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:39:00,668 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:00] "GET / HTTP/1.1" 200 -
+2024-12-29 02:39:09,608 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:09] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:39:09,610 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:09] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:39:10,534 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:39:10,535 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:39:10,674 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:39:10,709 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139888417821760)
+2024-12-29 02:39:10,717 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:39:10,719 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:10] "GET /auth/signup HTTP/1.1" 200 -
+2024-12-29 02:39:10,788 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:10] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:39:10,814 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:10] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:39:22,158 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:39:22,296 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:39:22,330 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139888417821760)
+2024-12-29 02:39:22,571 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139888417821760)
+2024-12-29 02:39:22,571 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:39:22] "[31m[1mPOST /auth/signup HTTP/1.1[0m" 400 -
+2024-12-29 02:40:04,213 - werkzeug - INFO - [_internal.py:97] -  * Detected change in '/home/runner/workspace/routes/auth.py', reloading
+2024-12-29 02:40:04,530 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:40:05,332 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:40:05,334 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:40:05,334 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:40:05,334 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:40:05,376 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:40:05,377 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:40:06,328 - __main__ - INFO - [app.py:164] - Application blueprints registered successfully
+2024-12-29 02:40:06,544 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140608913182208)
+2024-12-29 02:40:07,900 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:40:07,902 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:40:07,902 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:40:07,902 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:40:07,984 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:40:07,988 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:40:08,843 - __main__ - INFO - [app.py:164] - Application blueprints registered successfully
+2024-12-29 02:40:09,086 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139948840881664)
+2024-12-29 02:40:09,550 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139948840881664)
+2024-12-29 02:40:09,550 - __main__ - INFO - [app.py:196] - Initial database connection test successful
+2024-12-29 02:40:09,550 - __main__ - INFO - [app.py:201] - Application setup completed successfully
+2024-12-29 02:40:10,409 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139948840881664)
+2024-12-29 02:40:10,409 - __main__ - INFO - [app.py:213] - Database tables created successfully
+2024-12-29 02:40:10,430 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:40:10,431 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:40:10,432 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:40:11,002 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:40:11,003 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:40:11,003 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:40:11,003 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:40:11,053 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:40:11,054 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:40:11,488 - __main__ - INFO - [app.py:164] - Application blueprints registered successfully
+2024-12-29 02:40:11,711 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140089410866688)
+2024-12-29 02:40:12,142 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:12,143 - __main__ - INFO - [app.py:196] - Initial database connection test successful
+2024-12-29 02:40:12,143 - __main__ - INFO - [app.py:201] - Application setup completed successfully
+2024-12-29 02:40:12,980 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:12,980 - __main__ - INFO - [app.py:213] - Database tables created successfully
+2024-12-29 02:40:12,997 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:40:12,999 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 556-569-571
+2024-12-29 02:40:13,055 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:40:13,055 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:40:13,198 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:40:13,235 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:13,261 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:40:13,263 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:13] "GET / HTTP/1.1" 200 -
+2024-12-29 02:40:17,531 - flask_wtf.csrf - INFO - [csrf.py:263] - The CSRF session token is missing.
+2024-12-29 02:40:17,532 - __main__ - ERROR - [app.py:169] - CSRF error: 400 Bad Request: The CSRF session token is missing.
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 261, in protect
+    validate_csrf(self._get_csrf_token())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 103, in validate_csrf
+    raise ValidationError("The CSRF session token is missing.")
+wtforms.validators.ValidationError: The CSRF session token is missing.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 878, in full_dispatch_request
+    rv = self.preprocess_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1253, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 229, in csrf_protect
+    self.protect()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 264, in protect
+    self._error_response(e.args[0])
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 307, in _error_response
+    raise CSRFError(reason)
+flask_wtf.csrf.CSRFError: 400 Bad Request: The CSRF session token is missing.
+2024-12-29 02:40:17,548 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:17] "[35m[1mPOST /auth/signup HTTP/1.1[0m" 500 -
+2024-12-29 02:40:17,620 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:17] "[36mGET /auth/signup?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:40:17,624 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:17] "[36mGET /auth/signup?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:40:17,689 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:17] "[36mGET /auth/signup?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:40:18,626 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:40:18,628 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:40:18,771 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:40:18,806 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:18,813 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:40:18,814 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:18] "GET /auth/signup HTTP/1.1" 200 -
+2024-12-29 02:40:20,281 - flask_wtf.csrf - INFO - [csrf.py:263] - The CSRF token is invalid.
+2024-12-29 02:40:20,282 - __main__ - ERROR - [app.py:169] - CSRF error: 400 Bad Request: The CSRF token is invalid.
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 108, in validate_csrf
+    token = s.loads(data, max_age=time_limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/itsdangerous/timed.py", line 220, in loads
+    raise t.cast(BadSignature, last_exception)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/itsdangerous/timed.py", line 204, in loads
+    base64d, timestamp = signer.unsign(
+                         ^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/itsdangerous/timed.py", line 130, in unsign
+    raise BadTimeSignature(str(sig_error), payload=value, date_signed=ts_dt)
+itsdangerous.exc.BadTimeSignature: Signature b'U1-9GPr8Wemvnpx83OvrrB9UVSQ' does not match
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 261, in protect
+    validate_csrf(self._get_csrf_token())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 112, in validate_csrf
+    raise ValidationError("The CSRF token is invalid.") from e
+wtforms.validators.ValidationError: The CSRF token is invalid.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 878, in full_dispatch_request
+    rv = self.preprocess_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1253, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 229, in csrf_protect
+    self.protect()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 264, in protect
+    self._error_response(e.args[0])
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 307, in _error_response
+    raise CSRFError(reason)
+flask_wtf.csrf.CSRFError: 400 Bad Request: The CSRF token is invalid.
+2024-12-29 02:40:20,287 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:20] "[31m[1mPOST /auth/login HTTP/1.1[0m" 400 -
+2024-12-29 02:40:21,638 - flask_wtf.csrf - INFO - [csrf.py:263] - The CSRF token is invalid.
+2024-12-29 02:40:21,639 - __main__ - ERROR - [app.py:169] - CSRF error: 400 Bad Request: The CSRF token is invalid.
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 108, in validate_csrf
+    token = s.loads(data, max_age=time_limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/itsdangerous/timed.py", line 220, in loads
+    raise t.cast(BadSignature, last_exception)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/itsdangerous/timed.py", line 204, in loads
+    base64d, timestamp = signer.unsign(
+                         ^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/itsdangerous/timed.py", line 130, in unsign
+    raise BadTimeSignature(str(sig_error), payload=value, date_signed=ts_dt)
+itsdangerous.exc.BadTimeSignature: Signature b'U1-9GPr8Wemvnpx83OvrrB9UVSQ' does not match
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 261, in protect
+    validate_csrf(self._get_csrf_token())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 112, in validate_csrf
+    raise ValidationError("The CSRF token is invalid.") from e
+wtforms.validators.ValidationError: The CSRF token is invalid.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 878, in full_dispatch_request
+    rv = self.preprocess_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1253, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 229, in csrf_protect
+    self.protect()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 264, in protect
+    self._error_response(e.args[0])
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 307, in _error_response
+    raise CSRFError(reason)
+flask_wtf.csrf.CSRFError: 400 Bad Request: The CSRF token is invalid.
+2024-12-29 02:40:21,641 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:21] "[31m[1mPOST /auth/login HTTP/1.1[0m" 400 -
+2024-12-29 02:40:26,387 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:40:26,536 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:40:26,573 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:26,575 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:40:26,576 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:26] "GET /auth/signup HTTP/1.1" 200 -
+2024-12-29 02:40:26,687 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:26] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:40:26,695 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:26] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:40:36,769 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:40:36,915 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:40:36,952 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:37,395 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:37,542 - routes.auth - INFO - [auth.py:177] - New user created: 10
+2024-12-29 02:40:37,579 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140089410866688)
+2024-12-29 02:40:37,581 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:40:37] "POST /auth/signup HTTP/1.1" 200 -
+2024-12-29 02:41:26,495 - werkzeug - INFO - [_internal.py:97] -  * Detected change in '/home/runner/workspace/routes/auth.py', reloading
+2024-12-29 02:41:27,270 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:41:28,231 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:41:28,233 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:41:28,233 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:41:28,234 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:41:28,308 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:41:28,308 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:41:29,056 - __main__ - INFO - [app.py:164] - Application blueprints registered successfully
+2024-12-29 02:41:29,284 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140098397163328)
+2024-12-29 02:41:30,584 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:41:30,586 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:41:30,586 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:41:30,586 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:41:30,640 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:41:30,641 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:41:31,267 - __main__ - INFO - [app.py:164] - Application blueprints registered successfully
+2024-12-29 02:41:31,487 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140288801804096)
+2024-12-29 02:41:31,942 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140288801804096)
+2024-12-29 02:41:31,943 - __main__ - INFO - [app.py:196] - Initial database connection test successful
+2024-12-29 02:41:31,948 - __main__ - INFO - [app.py:201] - Application setup completed successfully
+2024-12-29 02:41:32,783 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140288801804096)
+2024-12-29 02:41:32,784 - __main__ - INFO - [app.py:213] - Database tables created successfully
+2024-12-29 02:41:32,820 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:41:32,820 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:41:32,820 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:41:33,637 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:41:33,643 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:41:33,645 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:41:33,646 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:41:33,718 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:41:33,719 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:41:34,328 - __main__ - INFO - [app.py:164] - Application blueprints registered successfully
+2024-12-29 02:41:34,547 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140370301292352)
+2024-12-29 02:41:35,012 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:35,013 - __main__ - INFO - [app.py:196] - Initial database connection test successful
+2024-12-29 02:41:35,013 - __main__ - INFO - [app.py:201] - Application setup completed successfully
+2024-12-29 02:41:35,824 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:35,825 - __main__ - INFO - [app.py:213] - Database tables created successfully
+2024-12-29 02:41:35,852 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:41:35,857 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 798-209-458
+2024-12-29 02:41:35,916 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:41:35,917 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:41:35,936 - flask_wtf.csrf - INFO - [csrf.py:263] - The CSRF session token is missing.
+2024-12-29 02:41:35,940 - __main__ - ERROR - [app.py:169] - CSRF error: 400 Bad Request: The CSRF session token is missing.
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 261, in protect
+    validate_csrf(self._get_csrf_token())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 103, in validate_csrf
+    raise ValidationError("The CSRF session token is missing.")
+wtforms.validators.ValidationError: The CSRF session token is missing.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 878, in full_dispatch_request
+    rv = self.preprocess_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1253, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 229, in csrf_protect
+    self.protect()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 264, in protect
+    self._error_response(e.args[0])
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 307, in _error_response
+    raise CSRFError(reason)
+flask_wtf.csrf.CSRFError: 400 Bad Request: The CSRF session token is missing.
+2024-12-29 02:41:35,993 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:35] "[35m[1mPOST /auth/signup HTTP/1.1[0m" 500 -
+2024-12-29 02:41:36,059 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:41:36,076 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:36] "[36mGET /auth/signup?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:41:36,080 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:36] "[36mGET /auth/signup?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:41:36,095 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:36,109 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:41:36,110 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:36] "GET / HTTP/1.1" 200 -
+2024-12-29 02:41:36,143 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:36] "[36mGET /auth/signup?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:41:37,382 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:41:37,382 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:41:37,521 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:41:37,557 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:37,570 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:41:37,570 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:37] "GET /auth/signup HTTP/1.1" 200 -
+2024-12-29 02:41:39,380 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:41:39,521 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:41:39,555 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:39,556 - routes.auth - INFO - [auth.py:29] - Rendering login page
+2024-12-29 02:41:39,561 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:41:39,562 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:39] "GET /auth/login HTTP/1.1" 200 -
+2024-12-29 02:41:39,686 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:39] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:41:39,688 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:39] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:41:47,602 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:41:47,742 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:41:47,776 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:47,777 - routes.auth - INFO - [auth.py:33] - Processing login request
+2024-12-29 02:41:48,308 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:48,455 - routes.auth - INFO - [auth.py:83] - User 10 logged in successfully
+2024-12-29 02:41:48,493 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:48,495 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:48] "POST /auth/login HTTP/1.1" 200 -
+2024-12-29 02:41:48,567 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:41:48,708 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:41:48,742 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:48,888 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:41:48,998 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140370301292352)
+2024-12-29 02:41:49,016 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:49] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:41:49,135 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:49] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:41:49,143 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:49] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:41:49,199 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:41:49] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:42:01,930 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:01] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:42:01,932 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:01] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:42:28,606 - werkzeug - INFO - [_internal.py:97] -  * Detected change in '/home/runner/workspace/app.py', reloading
+2024-12-29 02:42:29,269 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:42:30,455 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:42:30,456 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:42:30,457 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:42:30,457 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:42:30,562 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:42:30,562 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:42:32,890 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:42:32,892 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:42:32,893 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:42:32,893 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:42:33,011 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:42:33,012 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:42:34,518 - __main__ - INFO - [app.py:166] - Application blueprints registered successfully
+2024-12-29 02:42:34,743 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139954408830464)
+2024-12-29 02:42:35,176 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139954408830464)
+2024-12-29 02:42:35,176 - __main__ - INFO - [app.py:198] - Initial database connection test successful
+2024-12-29 02:42:35,177 - __main__ - INFO - [app.py:203] - Application setup completed successfully
+2024-12-29 02:42:36,018 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139954408830464)
+2024-12-29 02:42:36,018 - __main__ - INFO - [app.py:215] - Database tables created successfully
+2024-12-29 02:42:36,044 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:42:36,045 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:42:36,045 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:42:36,767 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:42:36,769 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:42:36,769 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:42:36,769 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:42:36,813 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:42:36,813 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:42:37,541 - __main__ - INFO - [app.py:166] - Application blueprints registered successfully
+2024-12-29 02:42:37,755 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140034943989248)
+2024-12-29 02:42:38,161 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:42:38,163 - __main__ - INFO - [app.py:198] - Initial database connection test successful
+2024-12-29 02:42:38,167 - __main__ - INFO - [app.py:203] - Application setup completed successfully
+2024-12-29 02:42:38,964 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:42:38,966 - __main__ - INFO - [app.py:215] - Database tables created successfully
+2024-12-29 02:42:38,992 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:42:38,995 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 289-799-602
+2024-12-29 02:42:39,055 - flask_wtf.csrf - INFO - [csrf.py:263] - The CSRF session token is missing.
+2024-12-29 02:42:39,057 - __main__ - ERROR - [app.py:171] - CSRF error: 400 Bad Request: The CSRF session token is missing.
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 261, in protect
+    validate_csrf(self._get_csrf_token())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 103, in validate_csrf
+    raise ValidationError("The CSRF session token is missing.")
+wtforms.validators.ValidationError: The CSRF session token is missing.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 878, in full_dispatch_request
+    rv = self.preprocess_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1253, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 229, in csrf_protect
+    self.protect()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 264, in protect
+    self._error_response(e.args[0])
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 307, in _error_response
+    raise CSRFError(reason)
+flask_wtf.csrf.CSRFError: 400 Bad Request: The CSRF session token is missing.
+2024-12-29 02:42:39,067 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:39] "[31m[1mPOST /auth/login HTTP/1.1[0m" 400 -
+2024-12-29 02:42:39,079 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:42:39,082 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:42:39,219 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:42:39,253 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:42:39,300 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:42:39,303 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:39] "GET / HTTP/1.1" 200 -
+2024-12-29 02:42:49,291 - flask_wtf.csrf - INFO - [csrf.py:263] - The CSRF session token is missing.
+2024-12-29 02:42:49,291 - __main__ - ERROR - [app.py:171] - CSRF error: 400 Bad Request: The CSRF session token is missing.
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 261, in protect
+    validate_csrf(self._get_csrf_token())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 103, in validate_csrf
+    raise ValidationError("The CSRF session token is missing.")
+wtforms.validators.ValidationError: The CSRF session token is missing.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 878, in full_dispatch_request
+    rv = self.preprocess_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1253, in preprocess_request
+    rv = self.ensure_sync(before_func)()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 229, in csrf_protect
+    self.protect()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 264, in protect
+    self._error_response(e.args[0])
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_wtf/csrf.py", line 307, in _error_response
+    raise CSRFError(reason)
+flask_wtf.csrf.CSRFError: 400 Bad Request: The CSRF session token is missing.
+2024-12-29 02:42:49,292 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:49] "[31m[1mPOST /auth/login HTTP/1.1[0m" 400 -
+2024-12-29 02:42:51,454 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:42:51,454 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:42:51,592 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:42:51,626 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:42:51,627 - routes.auth - INFO - [auth.py:29] - Rendering login page
+2024-12-29 02:42:51,630 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:42:51,631 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:51] "GET /auth/login HTTP/1.1" 200 -
+2024-12-29 02:42:51,719 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:51] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:42:51,733 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:42:51] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:02,381 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:02,517 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:02,552 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:43:02,553 - routes.auth - INFO - [auth.py:33] - Processing login request
+2024-12-29 02:43:02,998 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:43:03,139 - routes.auth - INFO - [auth.py:83] - User 10 logged in successfully
+2024-12-29 02:43:03,174 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:43:03,175 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:03] "POST /auth/login HTTP/1.1" 200 -
+2024-12-29 02:43:03,230 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:03,368 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:03,402 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:43:03,540 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:43:03,610 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140034943989248)
+2024-12-29 02:43:03,630 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:03] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:43:03,743 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:03] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:03,763 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:03] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:43:03,820 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:03] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:43:32,415 - werkzeug - INFO - [_internal.py:97] -  * Detected change in '/home/runner/workspace/app.py', reloading
+2024-12-29 02:43:32,659 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:43:33,293 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:43:33,296 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:43:33,297 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:43:33,297 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:43:33,340 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:43:33,340 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:43:33,841 - __main__ - INFO - [app.py:168] - Application blueprints registered successfully
+2024-12-29 02:43:34,058 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140544688244992)
+2024-12-29 02:43:34,469 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140544688244992)
+2024-12-29 02:43:34,470 - __main__ - INFO - [app.py:200] - Initial database connection test successful
+2024-12-29 02:43:34,470 - __main__ - INFO - [app.py:205] - Application setup completed successfully
+2024-12-29 02:43:35,899 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:43:35,903 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:43:35,904 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:43:35,904 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:43:35,951 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:43:35,952 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:43:36,583 - __main__ - INFO - [app.py:168] - Application blueprints registered successfully
+2024-12-29 02:43:36,816 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140296708376832)
+2024-12-29 02:43:37,241 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140296708376832)
+2024-12-29 02:43:37,241 - __main__ - INFO - [app.py:200] - Initial database connection test successful
+2024-12-29 02:43:37,241 - __main__ - INFO - [app.py:205] - Application setup completed successfully
+2024-12-29 02:43:38,062 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140296708376832)
+2024-12-29 02:43:38,062 - __main__ - INFO - [app.py:217] - Database tables created successfully
+2024-12-29 02:43:38,083 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:43:38,084 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:43:38,084 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:43:39,001 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:43:39,003 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:43:39,004 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:43:39,005 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:43:39,069 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:43:39,070 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:43:39,693 - __main__ - INFO - [app.py:168] - Application blueprints registered successfully
+2024-12-29 02:43:39,911 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139904962431232)
+2024-12-29 02:43:40,335 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:40,335 - __main__ - INFO - [app.py:200] - Initial database connection test successful
+2024-12-29 02:43:40,335 - __main__ - INFO - [app.py:205] - Application setup completed successfully
+2024-12-29 02:43:41,156 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:41,157 - __main__ - INFO - [app.py:217] - Database tables created successfully
+2024-12-29 02:43:41,175 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:43:41,178 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 133-314-436
+2024-12-29 02:43:41,248 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:43:41,249 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:41,393 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:41,428 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:41,454 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:43:41,456 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:41] "GET / HTTP/1.1" 200 -
+2024-12-29 02:43:42,894 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:42] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:42,953 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:42] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:45,206 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:43:45,206 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:45,346 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:45,381 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:45,383 - routes.auth - INFO - [auth.py:29] - Rendering login page
+2024-12-29 02:43:45,390 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:43:45,392 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:45] "GET /auth/login HTTP/1.1" 200 -
+2024-12-29 02:43:45,459 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:45] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:45,470 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:45] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:53,956 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:54,098 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:54,133 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:54,134 - routes.auth - INFO - [auth.py:33] - Processing login request
+2024-12-29 02:43:54,568 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:54,712 - routes.auth - INFO - [auth.py:84] - User 10 logged in successfully
+2024-12-29 02:43:54,713 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:43:54,748 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:54,749 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:54] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2024-12-29 02:43:54,791 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:54,932 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:54,968 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:55,121 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:43:55,188 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:55,199 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:55] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:43:58,777 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:58,917 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:58,952 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:59,093 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:43:59,093 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:43:59,129 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:59,129 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:59] "[32mGET /auth/signup HTTP/1.1[0m" 302 -
+2024-12-29 02:43:59,174 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:43:59,316 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:43:59,350 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:59,491 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:43:59,527 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:43:59,536 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:59] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:43:59,649 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:59] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:43:59,658 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:59] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:43:59,714 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:43:59] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:44:01,511 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:01] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:44:01,512 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:01] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:44:02,541 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:44:02,681 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:44:02,716 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:44:02,863 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:44:02,863 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:44:02,899 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:44:02,899 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:02] "[32mGET /auth/signup HTTP/1.1[0m" 302 -
+2024-12-29 02:44:02,946 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:44:03,125 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:44:03,160 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:44:03,302 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:44:03,337 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139904962431232)
+2024-12-29 02:44:03,345 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:03] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:44:03,460 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:03] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:44:03,469 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:03] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:44:03,519 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:44:03] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:45:00,685 - werkzeug - INFO - [_internal.py:97] -  * Detected change in '/home/runner/workspace/routes/auth.py', reloading
+2024-12-29 02:45:01,038 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:46:50,842 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:46:50,843 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:46:50,843 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:46:50,843 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:46:50,890 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:46:50,890 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:46:51,448 - __main__ - INFO - [app.py:170] - Application blueprints registered successfully
+2024-12-29 02:46:51,678 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 139935222302656)
+2024-12-29 02:46:52,092 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139935222302656)
+2024-12-29 02:46:52,093 - __main__ - INFO - [app.py:202] - Initial database connection test successful
+2024-12-29 02:46:52,093 - __main__ - INFO - [app.py:207] - Application setup completed successfully
+2024-12-29 02:46:52,898 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 139935222302656)
+2024-12-29 02:46:52,898 - __main__ - INFO - [app.py:219] - Database tables created successfully
+2024-12-29 02:46:52,924 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:46:52,925 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:46:52,926 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:46:53,982 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:46:53,984 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:46:53,984 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:46:53,984 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:46:54,038 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:46:54,039 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:46:54,580 - __main__ - INFO - [app.py:170] - Application blueprints registered successfully
+2024-12-29 02:46:54,811 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140661755447232)
+2024-12-29 02:46:55,227 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140661755447232)
+2024-12-29 02:46:55,227 - __main__ - INFO - [app.py:202] - Initial database connection test successful
+2024-12-29 02:46:55,227 - __main__ - INFO - [app.py:207] - Application setup completed successfully
+2024-12-29 02:46:56,018 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140661755447232)
+2024-12-29 02:46:56,018 - __main__ - INFO - [app.py:219] - Database tables created successfully
+2024-12-29 02:46:56,042 - werkzeug - INFO - [_internal.py:97] - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.106:5000
+2024-12-29 02:46:56,042 - werkzeug - INFO - [_internal.py:97] - [33mPress CTRL+C to quit[0m
+2024-12-29 02:46:56,043 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:46:56,574 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:46:56,576 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:46:56,576 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:46:56,576 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:46:56,630 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:46:56,632 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:46:57,167 - __main__ - INFO - [app.py:170] - Application blueprints registered successfully
+2024-12-29 02:46:57,396 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140108589680576)
+2024-12-29 02:46:57,805 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:46:57,805 - __main__ - INFO - [app.py:202] - Initial database connection test successful
+2024-12-29 02:46:57,805 - __main__ - INFO - [app.py:207] - Application setup completed successfully
+2024-12-29 02:46:58,606 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:46:58,606 - __main__ - INFO - [app.py:219] - Database tables created successfully
+2024-12-29 02:46:58,635 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:46:58,639 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 181-188-280
+2024-12-29 02:46:58,703 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:46:58,703 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:46:58,706 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:46:58,706 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:46:58,840 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:46:58,875 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:46:58,916 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:46:58,919 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:46:58] "GET / HTTP/1.1" 200 -
+2024-12-29 02:46:58,944 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140108589689216)
+2024-12-29 02:46:58,956 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:46:58] "GET /static/css/modern.css HTTP/1.1" 200 -
+2024-12-29 02:46:58,978 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:46:58] "GET /static/css/custom.css HTTP/1.1" 200 -
+2024-12-29 02:46:59,052 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:46:59,088 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:46:59,089 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:46:59,090 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:46:59] "GET / HTTP/1.1" 200 -
+2024-12-29 02:47:15,273 - __main__ - DEBUG - [app.py:112] - Session initialized as permanent
+2024-12-29 02:47:15,273 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:15,409 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:15,443 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:15,444 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:47:15,445 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:15] "GET / HTTP/1.1" 200 -
+2024-12-29 02:47:15,538 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:15] "GET /static/css/modern.css HTTP/1.1" 200 -
+2024-12-29 02:47:15,575 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:15] "GET /static/css/custom.css HTTP/1.1" 200 -
+2024-12-29 02:47:16,808 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:16,950 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:16,987 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:16,991 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:47:16,992 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:16] "GET /employers HTTP/1.1" 200 -
+2024-12-29 02:47:17,079 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:17] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:17,102 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:17] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:17,120 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:17] "[36mGET /static/images/video-resume-illustration.svg HTTP/1.1[0m" 304 -
+2024-12-29 02:47:34,309 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:34,446 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:34,481 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:34,482 - routes.auth - INFO - [auth.py:123] - Rendering login page
+2024-12-29 02:47:34,486 - __main__ - DEBUG - [app.py:148] - Set CSRF token cookie
+2024-12-29 02:47:34,487 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:34] "GET /auth/login HTTP/1.1" 200 -
+2024-12-29 02:47:34,574 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:34] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:34,611 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:34] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:44,142 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:44,285 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:44,320 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:44,322 - routes.auth - INFO - [auth.py:127] - Processing login request
+2024-12-29 02:47:44,765 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:44,912 - routes.auth - INFO - [auth.py:177] - User 10 logged in successfully
+2024-12-29 02:47:44,948 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:44,950 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:44] "POST /auth/login HTTP/1.1" 200 -
+2024-12-29 02:47:45,013 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:45,149 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:45,184 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:45,329 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:47:45,469 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:45,482 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:45] "[35m[1mGET /jobseeker/dashboard HTTP/1.1[0m" 500 -
+2024-12-29 02:47:45,578 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:45] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:45,605 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:45] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-12-29 02:47:45,673 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:45] "[36mGET /jobseeker/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-12-29 02:47:50,135 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:50] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:50,140 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:50] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:50,344 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:50] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:50,346 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:50] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:51,322 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:51,460 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:51,497 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:51,643 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:47:51,718 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:51,744 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:51] "[35m[1mGET /employers HTTP/1.1[0m" 500 -
+2024-12-29 02:47:51,804 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:51] "GET /employers?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-12-29 02:47:51,872 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:51] "GET /employers?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-12-29 02:47:51,960 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:51] "GET /employers?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-12-29 02:47:53,404 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:53] "[36mGET /static/css/modern.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:53,409 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:53] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2024-12-29 02:47:54,166 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:54,302 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:54,339 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:54,484 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:47:54,558 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:54,573 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:54] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2024-12-29 02:47:54,638 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:54] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-12-29 02:47:54,642 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:54] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-12-29 02:47:54,705 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:54] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-12-29 02:47:57,069 - __main__ - DEBUG - [app.py:115] - Generated new CSRF token
+2024-12-29 02:47:57,207 - __main__ - DEBUG - [app.py:121] - Database connection verified
+2024-12-29 02:47:57,242 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589680576)
+2024-12-29 02:47:57,390 - __main__ - DEBUG - [app.py:94] - Successfully loaded user 10
+2024-12-29 02:47:57,469 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140108589689216)
+2024-12-29 02:47:57,492 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:57] "[35m[1mGET /pricing HTTP/1.1[0m" 500 -
+2024-12-29 02:47:57,623 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:57] "GET /pricing?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-12-29 02:47:57,632 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:57] "GET /pricing?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-12-29 02:47:57,694 - werkzeug - INFO - [_internal.py:97] - 172.31.196.106 - - [29/Dec/2024 02:47:57] "GET /pricing?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-12-29 02:49:20,082 - werkzeug - INFO - [_internal.py:97] -  * Detected change in '/home/runner/workspace/routes/profile.py', reloading
+2024-12-29 02:49:20,862 - werkzeug - INFO - [_internal.py:97] -  * Restarting with stat
+2024-12-29 02:49:21,828 - __main__ - INFO - [app.py:32] - Starting application creation process...
+2024-12-29 02:49:21,830 - __main__ - INFO - [app.py:42] - Configuring application with database URL: postgresql://neondb_owner:2hLFtID6bPky...
+2024-12-29 02:49:21,837 - __main__ - INFO - [app.py:65] - Application configuration loaded successfully
+2024-12-29 02:49:21,838 - __main__ - INFO - [app.py:68] - Initializing Flask extensions...
+2024-12-29 02:49:21,946 - __main__ - INFO - [app.py:80] - Flask extensions initialized successfully
+2024-12-29 02:49:21,947 - __main__ - INFO - [app.py:155] - Registering application blueprints...
+2024-12-29 02:49:22,985 - __main__ - INFO - [app.py:170] - Application blueprints registered successfully
+2024-12-29 02:49:23,214 - extensions - DEBUG - [extensions.py:107] - New database connection established (id: 140159151998912)
+2024-12-29 02:49:23,625 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140159151998912)
+2024-12-29 02:49:23,626 - __main__ - INFO - [app.py:202] - Initial database connection test successful
+2024-12-29 02:49:23,627 - __main__ - INFO - [app.py:207] - Application setup completed successfully
+2024-12-29 02:49:24,427 - extensions - DEBUG - [extensions.py:122] - Database connection returned to pool (id: 140159151998912)
+2024-12-29 02:49:24,428 - __main__ - INFO - [app.py:219] - Database tables created successfully
+2024-12-29 02:49:24,460 - werkzeug - WARNING - [_internal.py:97] -  * Debugger is active!
+2024-12-29 02:49:24,466 - werkzeug - INFO - [_internal.py:97] -  * Debugger PIN: 143-012-046
