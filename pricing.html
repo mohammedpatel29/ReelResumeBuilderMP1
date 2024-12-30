@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block title %}Pricing{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold">Simple, Transparent Pricing</h1>
+        <p class="lead text-muted mb-5">Choose the plan that's right for your career goals</p>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="row g-4 px-4 justify-content-center">
+        <!-- Free Plan -->
+        <div class="col-lg-3">
+            <div class="pricing-card h-100 bg-white rounded-4 p-4">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Free</h4>
+                    <div class="pricing-amount">
+                        <h2 class="display-4 fw-bold mb-0">Free</h2>
+                        <p class="text-muted mb-0">Forever free</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>1 video resume</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Basic video editing</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Share via link</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Community support</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-auto">
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-outline-primary d-block">Sign up</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="col-lg-3">
+            <div class="pricing-card h-100 bg-white rounded-4 p-4">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Pro</h4>
+                    <div class="pricing-amount">
+                        <h2 class="display-4 fw-bold mb-0">$149</h2>
+                        <p class="text-muted mb-0">/mo</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <p class="fw-bold mb-3">Everything in Free, plus:</p>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Unlimited video resumes</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Advanced video editing</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Advanced analytics</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Priority support</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-auto">
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary d-block">Sign up</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="col-lg-3">
+            <div class="pricing-card h-100 bg-white rounded-4 p-4">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Enterprise</h4>
+                    <div class="pricing-amount">
+                        <h2 class="display-4 fw-bold mb-0">$499</h2>
+                        <p class="text-muted mb-0">/mo</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <p class="fw-bold mb-3">Everything in Pro, plus:</p>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Custom branding</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>API access</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Team collaboration</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="bi bi-check2 text-primary fs-4 me-2"></i>
+                            <span>Dedicated support</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-auto">
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary d-block">Contact sales</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row justify-content-center py-5 mt-5">
+        <div class="col-lg-8">
+            <h2 class="fw-bold text-center mb-4">Frequently Asked Questions</h2>
+            <div class="accordion" id="pricingFAQ">
+                <div class="accordion-item border-0 mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            What's included in the free plan?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            The free plan includes essential features to create your first video resume: basic video editing tools and the ability to share your video resume via link.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Can I upgrade or downgrade my plan anytime?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            Yes, you can change your plan at any time. When upgrading, you'll have immediate access to new features. When downgrading, changes will take effect at the start of your next billing cycle.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Do you offer custom enterprise solutions?
+                        </button>
+                    </h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            Yes, we offer customized enterprise solutions for organizations with specific needs. Contact our sales team to discuss your requirements and get a tailored quote.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.pricing-card {
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.accordion-button {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--background);
+    border-color: var(--primary);
+}
+
+.accordion-body {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+</style>
+{% endblock %}

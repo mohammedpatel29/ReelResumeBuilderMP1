@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Help Center - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="h2 mb-4">Help Center</h1>
+            
+            <!-- Quick Links -->
+            <div class="row g-4 mb-5">
+                <div class="col-sm-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-camera-video text-primary display-6 me-3"></i>
+                                <h3 class="h5 mb-0">Video Creation</h3>
+                            </div>
+                            <p class="text-muted mb-0">Learn how to create and manage your video resumes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-person-badge text-primary display-6 me-3"></i>
+                                <h3 class="h5 mb-0">Account Management</h3>
+                            </div>
+                            <p class="text-muted mb-0">Manage your profile and account settings</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Topics -->
+            <h2 class="h4 mb-4">Popular Topics</h2>
+            <div class="accordion mb-5" id="helpAccordion">
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            How do I create my first video resume?
+                        </button>
+                    </h3>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                        <div class="accordion-body">
+                            <ol class="mb-0">
+                                <li class="mb-2">Click on "Upload Video" from your dashboard</li>
+                                <li class="mb-2">Choose a video file from your computer (supported formats: MP4, MOV, AVI, WEBM, MKV)</li>
+                                <li class="mb-2">Add a title and description for your video</li>
+                                <li class="mb-2">Click upload and wait for processing to complete</li>
+                                <li>Share your video resume with potential employers using the generated link or QR code</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            What are the recommended video specifications?
+                        </button>
+                    </h3>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                        <div class="accordion-body">
+                            <ul class="mb-0">
+                                <li>Maximum file size: 500MB</li>
+                                <li>Recommended length: 2-3 minutes</li>
+                                <li>Supported formats: MP4, MOV, AVI, WEBM, MKV</li>
+                                <li>Recommended resolution: 1080p (1920x1080)</li>
+                                <li>Aspect ratio: 16:9</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            How do I track my video performance?
+                        </button>
+                    </h3>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                        <div class="accordion-body">
+                            <p>Access detailed analytics for your videos through:</p>
+                            <ol class="mb-0">
+                                <li>Navigate to the Analytics section in your dashboard</li>
+                                <li>View metrics such as:
+                                    <ul>
+                                        <li>Total views and unique viewers</li>
+                                        <li>Average watch time</li>
+                                        <li>Completion rates</li>
+                                        <li>Employer interactions</li>
+                                    </ul>
+                                </li>
+                                <li>Click on individual videos for detailed performance data</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <h3 class="h5 mb-3">Can't find what you're looking for?</h3>
+                    <p class="text-muted mb-3">Our support team is here to help you with any questions</p>
+                    <a href="{{ url_for('static_pages.contact') }}" class="btn btn-primary">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

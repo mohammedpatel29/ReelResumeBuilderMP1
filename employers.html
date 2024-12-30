@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}For Employers{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Hero Section -->
+    <div class="row align-items-center py-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-4" style="color: var(--primary);">
+                Transform Your Hiring with Video Resumes
+            </h1>
+            <p class="lead mb-4" style="color: var(--text-secondary); font-size: 1.25rem;">
+                Experience a new way to evaluate talent. Get to know your candidates before the interview through professional video resumes.
+            </p>
+            {% if not current_user.is_authenticated %}
+            <div class="d-flex gap-3">
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg px-4 py-2">Post a Job</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg px-4 py-2">View Candidates</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-6">
+            <img src="{{ url_for('static', filename='images/video-resume-illustration.svg') }}" 
+                 alt="Hiring Process Illustration" 
+                 class="img-fluid shadow-lg rounded-4">
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row py-5 mt-4 justify-content-center text-center">
+        <div class="col-md-4">
+            <h2 class="display-4 fw-bold mb-2">85%</h2>
+            <p class="text-muted">Faster candidate screening</p>
+        </div>
+        <div class="col-md-4">
+            <h2 class="display-4 fw-bold mb-2">3x</h2>
+            <p class="text-muted">More qualified candidates</p>
+        </div>
+        <div class="col-md-4">
+            <h2 class="display-4 fw-bold mb-2">92%</h2>
+            <p class="text-muted">Hiring manager satisfaction</p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row py-5 g-4">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold mb-3">Why Choose Reel Resume</h2>
+            <p class="text-muted mb-5">Everything you need to make better hiring decisions, faster</p>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 h-100 bg-white rounded-3">
+                <h3 class="h5 fw-bold mb-3">Video-First Screening</h3>
+                <p class="text-muted mb-0">Get an authentic view of candidates' communication skills, personality, and professional presence before scheduling interviews.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 h-100 bg-white rounded-3">
+                <h3 class="h5 fw-bold mb-3">AI-Powered Insights</h3>
+                <p class="text-muted mb-0">Leverage advanced analytics to assess candidate soft skills, cultural fit, and potential based on video presentations.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 h-100 bg-white rounded-3">
+                <h3 class="h5 fw-bold mb-3">Streamlined Workflow</h3>
+                <p class="text-muted mb-0">Collaborate with your team, share feedback, and manage the entire hiring process from a single dashboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center py-5 mt-4">
+        <h2 class="fw-bold mb-4">Ready to Transform Your Hiring?</h2>
+        <p class="text-muted mb-4">Join thousands of companies already hiring better with video resumes</p>
+        <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg px-5 py-3">Get Started Today</a>
+    </div>
+</div>
+
+<style>
+.bg-white {
+    background: var(--background);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.bg-white:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+.step-number {
+    width: 40px;
+    height: 40px;
+    background-color: var(--bs-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0 auto;
+}
+</style>
+{% endblock %}

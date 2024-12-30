@@ -1,0 +1,605 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Video{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+.option-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+    height: 100%;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--bs-primary);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.option-card.selected {
+    border-color: var(--bs-primary);
+    background-color: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.option-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--bs-primary);
+}
+
+.script-generation-banner {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.script-generation-banner h5 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.script-generation-banner p {
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.script-content {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner-overlay.active {
+    display: flex;
+}
+
+.spinner-content {
+    text-align: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 80%;
+}
+
+.progress {
+    height: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--bs-primary);
+    transition: width 0.3s ease;
+}
+
+.upload-status {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Add sharing modal styles */
+.sharing-tips li {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+#shareSuccessQrCode {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#shareSuccessQrCode img {
+    max-width: 200px;
+    height: auto;
+}
+
+.best-practice-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.best-practice-icon {
+    color: var(--bs-primary);
+    font-size: 1rem;
+    cursor: help;
+    margin-left: 0.5rem;
+}
+
+.best-practice-content {
+    background: white;
+    border: 1px solid var(--bs-primary);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.best-practice-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.best-practice-list li {
+    display: flex;
+    align-items: start;
+    margin-bottom: 0.75rem;
+}
+
+.best-practice-list li i {
+    color: var(--bs-primary);
+    margin-right: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.qr-code-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.qr-code-wrapper:hover {
+    transform: scale(1.02);
+}
+
+#shareSuccessQrCode {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#shareSuccessQrCode canvas {
+    border-radius: 12px;
+    display: block;
+}
+
+.qr-code-brand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 20%;
+    height: 20%;
+}
+
+.brand-overlay {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: white;
+    border-radius: 8px;
+    opacity: 0.85;
+}
+
+.brand-logo {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Spinner Overlay -->
+<div id="uploadSpinnerOverlay" class="spinner-overlay">
+    <div class="spinner-content">
+        <h5 class="text-white mb-3">Uploading Video</h5>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="upload-status">Preparing upload...</div>
+    </div>
+</div>
+
+<!-- Share Success Modal -->
+<div class="modal fade" id="shareSuccessModal" tabindex="-1" aria-labelledby="shareSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="shareSuccessModalLabel">
+                    <i class="bi bi-check-circle-fill me-2"></i>Video Upload Successful!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="display-1 text-success mb-3">
+                        <i class="bi bi-share"></i>
+                    </div>
+                    <h4>Ready to Stand Out?</h4>
+                    <p class="lead">Your video resume is now ready to share!</p>
+                </div>
+
+                <div class="sharing-tips mb-4">
+                    <h6 class="mb-3">Pro Tips for Maximum Impact:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-1-circle-fill text-primary me-2"></i>
+                            Add your video link to job applications to stand out
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-2-circle-fill text-primary me-2"></i>
+                            Include your QR code on your printed resume
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-3-circle-fill text-primary me-2"></i>
+                            Share on LinkedIn to showcase your professional story
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sharing-options">
+                    <div class="mb-3">
+                        <label class="form-label">Your Video Link:</label>
+                        <div class="input-group">
+                            <input type="text" id="shareSuccessUrl" class="form-control" readonly>
+                            <button class="btn btn-outline-primary" onclick="copyShareSuccessUrl()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <div class="qr-code-wrapper">
+                            <div id="shareSuccessQrCode" class="d-inline-block p-2 bg-white rounded"></div>
+                            <div class="qr-code-brand">
+                                <div class="brand-overlay"></div>
+                                <img src="{{ url_for('static', filename='img/qr-logo.svg') }}" alt="Brand Logo" class="brand-logo">
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="downloadQRCode()">
+                                <i class="bi bi-download me-1"></i>Download QR Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('video.list_videos') }}" class="btn btn-primary">
+                    <i class="bi bi-collection-play me-1"></i>View All Videos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Best Practices Header -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="mb-3">
+                        Video Resume Best Practices
+                        <span class="best-practice-tooltip" data-bs-toggle="tooltip" data-bs-placement="right" 
+                              title="Click to see detailed best practices">
+                            <i class="bi bi-info-circle best-practice-icon" data-bs-toggle="collapse" 
+                               data-bs-target="#bestPracticesContent"></i>
+                        </span>
+                    </h5>
+                    <div class="collapse" id="bestPracticesContent">
+                        <div class="best-practice-content">
+                            <ul class="best-practice-list">
+                                <li>
+                                    <i class="bi bi-camera-video"></i>
+                                    <span>Record in a quiet, well-lit environment with a neutral background</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-mic"></i>
+                                    <span>Use a clear, professional speaking voice and maintain good audio quality</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-person"></i>
+                                    <span>Dress professionally and maintain good posture</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-clock"></i>
+                                    <span>Keep your video between 60-90 seconds for optimal engagement</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-chat-quote"></i>
+                                    <span>Focus on your key achievements and unique value proposition</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if not script_content %}
+            <!-- AI Script Generation Banner -->
+            <div class="script-generation-banner mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5><i class="bi bi-robot me-2"></i>Need help with your script?</h5>
+                        <p class="mb-md-0">Let AI help you create a professional video resume script based on your resume</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="{{ url_for('script.generate_script') }}" class="btn btn-light btn-lg">
+                            <i class="bi bi-magic me-2"></i>Generate Script
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Script Display Section -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="mb-3">Your Script</h5>
+                    <div class="script-content">{{ script_content }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row g-4">
+                <!-- Record Video Option -->
+                <div class="col-md-6">
+                    <a href="{{ url_for('video.record') }}" class="text-decoration-none">
+                        <div class="card option-card h-100">
+                            <div class="card-body text-center p-5">
+                                <div class="option-icon">
+                                    <i class="bi bi-camera-video"></i>
+                                </div>
+                                <h4 class="mb-3">Record Video</h4>
+                                <p class="text-muted mb-0">
+                                    Record your video resume directly using your webcam
+                                    <span class="best-practice-tooltip" data-bs-toggle="tooltip" 
+                                          title="Use good lighting and a quiet environment">
+                                        <i class="bi bi-info-circle-fill best-practice-icon"></i>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Upload Video Option -->
+                <div class="col-md-6">
+                    <a href="{{ url_for('video.upload_existing') }}" class="text-decoration-none">
+                        <div class="card option-card h-100">
+                            <div class="card-body text-center p-5">
+                                <div class="option-icon">
+                                    <i class="bi bi-upload"></i>
+                                </div>
+                                <h4 class="mb-3">Upload Video</h4>
+                                <p class="text-muted mb-0">
+                                    Upload an existing video from your device
+                                    <span class="best-practice-tooltip" data-bs-toggle="tooltip" 
+                                          title="Recommended format: MP4, max duration: 90 seconds">
+                                        <i class="bi bi-info-circle-fill best-practice-icon"></i>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    const form = document.getElementById('uploadForm');
+    const uploadButton = document.getElementById('uploadButton');
+    const uploadSpinnerOverlay = document.getElementById('uploadSpinnerOverlay');
+    const progressBar = document.querySelector('.progress-bar');
+    const uploadStatus = document.querySelector('.upload-status');
+    let shareSuccessRedirectUrl = '';
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            // Show loading spinner and disable button
+            uploadSpinnerOverlay.classList.add('active');
+            uploadButton.disabled = true;
+            progressBar.style.width = '0%';
+            progressBar.setAttribute('aria-valuenow', 0);
+
+            // Create and configure XHR
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+
+            // Set CSRF token in header
+            const csrfToken = formData.get('csrf_token');
+            if (csrfToken) {
+                xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            }
+
+            // Track upload progress
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const percentComplete = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.setAttribute('aria-valuenow', percentComplete);
+                    uploadStatus.textContent = `Uploading: ${percentComplete}%`;
+                }
+            };
+
+            // Handle response
+            xhr.onload = function() {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (xhr.status === 200 && response.success) {
+                        uploadStatus.textContent = 'Upload completed successfully!';
+
+                        // Set up share success modal
+                        shareSuccessRedirectUrl = response.redirect_url;
+                        const shareUrl = `${window.location.origin}${response.redirect_url}`;
+
+                        // Update share URL input
+                        document.getElementById('shareSuccessUrl').value = shareUrl;
+
+                        // Generate QR Code
+                        const qrContainer = document.getElementById('shareSuccessQrCode');
+                        qrContainer.innerHTML = ''; // Clear existing content
+                        new QRCode(qrContainer, {
+                            text: shareUrl,
+                            width: 200,
+                            height: 200,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+
+                        // Show the modal
+                        const shareSuccessModal = new bootstrap.Modal(document.getElementById('shareSuccessModal'));
+                        shareSuccessModal.show();
+                    } else {
+                        throw new Error(response.message || 'Upload failed');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Upload failed: ' + error.message);
+                    uploadSpinnerOverlay.classList.remove('active');
+                    uploadButton.disabled = false;
+                }
+            };
+
+            // Handle network errors
+            xhr.onerror = function() {
+                console.error('Network error during upload');
+                alert('Network error occurred during upload');
+                uploadSpinnerOverlay.classList.remove('active');
+                uploadButton.disabled = false;
+            };
+
+            // Send the form data
+            xhr.send(formData);
+        });
+    }
+
+    // Helper functions for share success modal
+    window.copyShareSuccessUrl = function() {
+        const shareUrl = document.getElementById('shareSuccessUrl');
+        shareUrl.select();
+        document.execCommand('copy');
+
+        const copyButton = shareUrl.nextElementSibling;
+        const originalHTML = copyButton.innerHTML;
+        copyButton.innerHTML = '<i class="bi bi-check2"></i>';
+        setTimeout(() => {
+            copyButton.innerHTML = originalHTML;
+        }, 2000);
+    };
+
+    window.downloadQRCode = function() {
+        const qrCanvas = document.querySelector('#shareSuccessQrCode canvas');
+        const brandLogo = document.querySelector('.qr-code-brand img');
+
+        if (qrCanvas && brandLogo) {
+            // Create a temporary canvas
+            const tempCanvas = document.createElement('canvas');
+            const ctx = tempCanvas.getContext('2d');
+
+            // Add padding for rounded corners
+            const padding = 40;
+            tempCanvas.width = qrCanvas.width + (padding * 2);
+            tempCanvas.height = qrCanvas.height + (padding * 2);
+
+            // Draw white background with rounded corners
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, tempCanvas.width, tempCanvas.height, 12);
+            ctx.fill();
+
+            // Draw QR code in the center
+            ctx.drawImage(qrCanvas, padding, padding);
+
+            // Calculate logo position and size
+            const logoSize = Math.min(qrCanvas.width, qrCanvas.height) * 0.2;
+            const logoX = (tempCanvas.width - logoSize) / 2;
+            const logoY = (tempCanvas.height - logoSize) / 2;
+
+            // Draw white background for logo
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.roundRect(logoX, logoY, logoSize, logoSize, 8);
+            ctx.fill();
+
+            // Draw logo
+            ctx.drawImage(brandLogo, logoX, logoY, logoSize, logoSize);
+
+            // Create download link with timestamp
+            const timestamp = new Date().toISOString().slice(0, 10);
+            const link = document.createElement('a');
+            link.download = `video-resume-qr-${timestamp}.png`;
+            link.href = tempCanvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
+});
+</script>
+{% endblock %}

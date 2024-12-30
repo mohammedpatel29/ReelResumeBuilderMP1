@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}New Message - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-envelope-fill text-primary h4 mb-0"></i>
+                        </div>
+                        <h1 class="h5 mb-0">New Message</h1>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <label class="form-label">To:</label>
+                        <div class="d-flex align-items-center">
+                            {% if receiver.profile_picture %}
+                            <img src="{{ url_for('static', filename='uploads/profile_pictures/' + receiver.profile_picture) }}"
+                                 class="rounded-circle me-2"
+                                 alt="{{ receiver.first_name }}"
+                                 style="width: 32px; height: 32px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
+                                 style="width: 32px; height: 32px;">
+                                <i class="bi bi-person text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <span>{{ receiver.first_name }} {{ receiver.last_name }}</span>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('messaging.new_message', receiver_id=receiver.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="subject" 
+                                   name="subject" 
+                                   required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="content" class="form-label">Message</label>
+                            <textarea class="form-control" 
+                                      id="content" 
+                                      name="content" 
+                                      rows="6" 
+                                      required></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send-fill me-1"></i> Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}My Playlists{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">My Playlists</h1>
+        <a href="{{ url_for('playlist.create_playlist') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create New Playlist
+        </a>
+    </div>
+
+    {% if playlists %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for playlist in playlists %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ playlist.title }}</h5>
+                    <p class="card-text description-text">{{ playlist.description }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group w-100">
+                        <a href="{{ url_for('playlist.view_playlist', playlist_id=playlist.id) }}" 
+                           class="btn btn-outline-primary">View</a>
+                        <a href="{{ url_for('playlist.edit_playlist', playlist_id=playlist.id) }}" 
+                           class="btn btn-outline-secondary">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <h3>No playlists yet</h3>
+        <p>Start creating playlists to organize your video resumes!</p>
+        <a href="{{ url_for('playlist.create_playlist') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create Your First Playlist
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

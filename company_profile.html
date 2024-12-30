@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Profile - {{ current_user.company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Company Profile</h1>
+            <p class="text-muted">Showcase your company culture and attract top talent</p>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {{ csrf_token() }}
+        
+        <!-- Company Media -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Company Media</h5>
+                
+                <div class="row g-4">
+                    <!-- Logo Upload -->
+                    <div class="col-md-4">
+                        <label class="form-label">Company Logo</label>
+                        <div class="d-flex align-items-center">
+                            {% if profile and profile.logo_url %}
+                            <img src="{{ url_for('static', filename=profile.logo_url) }}" 
+                                 alt="Company Logo" 
+                                 class="rounded me-3" 
+                                 style="width: 64px; height: 64px; object-fit: contain;">
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <input type="file" 
+                                       class="form-control" 
+                                       name="logo" 
+                                       accept="image/*">
+                                <small class="text-muted">Recommended: 200x200px PNG/JPG</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover Image Upload -->
+                    <div class="col-md-4">
+                        <label class="form-label">Cover Image</label>
+                        <div class="d-flex align-items-center">
+                            {% if profile and profile.cover_image_url %}
+                            <img src="{{ url_for('static', filename=profile.cover_image_url) }}" 
+                                 alt="Cover Image" 
+                                 class="rounded me-3" 
+                                 style="width: 120px; height: 64px; object-fit: cover;">
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <input type="file" 
+                                       class="form-control" 
+                                       name="cover_image" 
+                                       accept="image/*">
+                                <small class="text-muted">Recommended: 1200x630px PNG/JPG</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Culture Video Upload -->
+                    <div class="col-md-4">
+                        <label class="form-label">Culture Video</label>
+                        <div class="d-flex align-items-center">
+                            {% if profile and profile.culture_video_url %}
+                            <div class="rounded me-3" style="width: 120px; height: 64px;">
+                                <video playsinline controls style="width: 100%; height: 100%; object-fit: cover;">
+                                    <source src="{{ url_for('static', filename=profile.culture_video_url) }}" type="video/mp4">
+                                    Your browser does not support HTML5 video.
+                                </video>
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <input type="file" 
+                                       class="form-control" 
+                                       name="culture_video" 
+                                       accept="video/*">
+                                <small class="text-muted">Max duration: 3 minutes</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Company Information</h5>
+
+                <div class="mb-4">
+                    <label class="form-label">Mission Statement</label>
+                    <textarea class="form-control" 
+                              name="mission_statement" 
+                              rows="3" 
+                              required>{{ profile.mission_statement if profile else '' }}</textarea>
+                    <div class="invalid-feedback">Please provide a mission statement.</div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Company Values -->
+                    <div class="col-md-6">
+                        <label class="form-label">Company Values</label>
+                        <div class="values-container">
+                            {% if profile and profile.company_values %}
+                                {% for value in profile.company_values %}
+                                <div class="input-group mb-2">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="company_values" 
+                                           value="{{ value }}" 
+                                           required>
+                                    <button type="button" class="btn btn-outline-danger remove-value">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="btn btn-outline-primary add-value">
+                                <i class="bi bi-plus"></i> Add Value
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Benefits -->
+                    <div class="col-md-6">
+                        <label class="form-label">Benefits</label>
+                        <div class="benefits-container">
+                            {% if profile and profile.benefits %}
+                                {% for benefit in profile.benefits %}
+                                <div class="input-group mb-2">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="benefits" 
+                                           value="{{ benefit }}" 
+                                           required>
+                                    <button type="button" class="btn btn-outline-danger remove-benefit">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="btn btn-outline-primary add-benefit">
+                                <i class="bi bi-plus"></i> Add Benefit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Links & Locations -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Social Links & Locations</h5>
+
+                <div class="row g-4">
+                    <!-- Social Media Links -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">LinkedIn</label>
+                            <input type="url" 
+                                   class="form-control" 
+                                   name="linkedin" 
+                                   value="{{ profile.social_media_links.linkedin if profile and profile.social_media_links else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Twitter</label>
+                            <input type="url" 
+                                   class="form-control" 
+                                   name="twitter" 
+                                   value="{{ profile.social_media_links.twitter if profile and profile.social_media_links else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Company Website</label>
+                            <input type="url" 
+                                   class="form-control" 
+                                   name="website" 
+                                   value="{{ profile.social_media_links.website if profile and profile.social_media_links else '' }}">
+                        </div>
+                    </div>
+
+                    <!-- Office Locations -->
+                    <div class="col-md-6">
+                        <label class="form-label">Office Locations</label>
+                        <div class="locations-container">
+                            {% if profile and profile.office_locations %}
+                                {% for location in profile.office_locations %}
+                                <div class="input-group mb-2">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="office_locations" 
+                                           value="{{ location }}" 
+                                           required>
+                                    <button type="button" class="btn btn-outline-danger remove-location">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="btn btn-outline-primary add-location">
+                                <i class="bi bi-plus"></i> Add Location
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary px-4">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+
+    // Dynamic field management
+    function createInputGroup(name, placeholder) {
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2';
+        div.innerHTML = `
+            <input type="text" class="form-control" name="${name}" placeholder="${placeholder}" required>
+            <button type="button" class="btn btn-outline-danger remove-field">
+                <i class="bi bi-dash"></i>
+            </button>
+        `;
+        return div;
+    }
+
+    function setupDynamicFields(addButtonClass, containerClass, fieldName, placeholder) {
+        const addButton = document.querySelector(`.${addButtonClass}`);
+        const container = addButton.parentElement;
+
+        addButton.addEventListener('click', () => {
+            container.insertBefore(createInputGroup(fieldName, placeholder), addButton);
+        });
+
+        container.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-field') || 
+                e.target.parentElement.classList.contains('remove-field')) {
+                const button = e.target.closest('.btn');
+                if (button) {
+                    button.closest('.input-group').remove();
+                }
+            }
+        });
+    }
+
+    // Setup dynamic fields for values, benefits, and locations
+    setupDynamicFields('add-value', 'values-container', 'company_values', 'Enter company value');
+    setupDynamicFields('add-benefit', 'benefits-container', 'benefits', 'Enter benefit');
+    setupDynamicFields('add-location', 'locations-container', 'office_locations', 'Enter office location');
+});
+</script>
+{% endblock %}
+
+{% endblock %}

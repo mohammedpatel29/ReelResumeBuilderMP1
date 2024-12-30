@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Video Statistics - {{ video.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('analytics.dashboard') }}">Analytics</a></li>
+                    <li class="breadcrumb-item active">{{ video.title }}</li>
+                </ol>
+            </nav>
+            <h1 class="h2">Video Statistics</h1>
+            <p class="text-muted">Detailed analytics for "{{ video.title }}"</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-eye-fill text-primary display-6"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1">Total Views</h6>
+                            <h3 class="mb-0">{{ total_views }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-people-fill text-success display-6"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1">Unique Viewers</h6>
+                            <h3 class="mb-0">{{ unique_viewers }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-clock-fill text-warning display-6"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1">Avg. Watch Time</h6>
+                            <h3 class="mb-0">{{ avg_watch_duration }}s</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-bar-chart-fill text-info display-6"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1">Completion Rate</h6>
+                            <h3 class="mb-0">{{ avg_completion_rate }}%</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Daily Views Chart -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">Daily Views</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="dailyViewsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employer Interactions -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">Employer Interactions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-building text-primary me-2"></i>
+                                    Employer Views
+                                </div>
+                                <span class="badge bg-primary">{{ employer_views }}</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-bookmark text-success me-2"></i>
+                                    Bookmarks
+                                </div>
+                                <span class="badge bg-success">{{ bookmarks }}</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-star text-warning me-2"></i>
+                                    Shortlists
+                                </div>
+                                <span class="badge bg-warning">{{ shortlists }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Views Chart
+    const dailyViews = {{ daily_views|tojson }};
+    const dates = dailyViews.map(item => item.date).reverse();
+    const views = dailyViews.map(item => item.views).reverse();
+    
+    new Chart(document.getElementById('dailyViewsChart'), {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Views',
+                data: views,
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

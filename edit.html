@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Playlist{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Edit Playlist</h2>
+                    <form method="POST" class="needs-validation" novalidate>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            {{ form.title(class="form-control", id="title", required=true) }}
+                            {% if form.title.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.title.errors[0] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            {{ form.description(class="form-control", id="description", rows=3) }}
+                            {% if form.description.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.description.errors[0] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_public(class="form-check-input", id="is_public") }}
+                                <label class="form-check-label" for="is_public">
+                                    Make this playlist public
+                                </label>
+                                <div class="form-text">
+                                    Public playlists can be shared and viewed by anyone with the link or QR code.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Playlist</button>
+                            <a href="{{ url_for('playlist.view_playlist', playlist_id=playlist.id) }}" 
+                               class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Form validation
+(function() {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+
+    // Add CSRF token to AJAX requests
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add CSRF token to all AJAX requests
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('load', function() {
+            const token = this.getResponseHeader('X-CSRFToken');
+            if (token) {
+                document.querySelector('meta[name="csrf-token"]').content = token;
+            }
+        });
+    });
+})();
+</script>
+{% endblock %}

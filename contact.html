@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="h2 mb-4">Contact Us</h1>
+            
+            <!-- Contact Methods -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-envelope-fill text-primary display-5 mb-3"></i>
+                            <h3 class="h5">Email Support</h3>
+                            <p class="text-muted mb-0">support@reelresume.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-telephone-fill text-primary display-5 mb-3"></i>
+                            <h3 class="h5">Phone Support</h3>
+                            <p class="text-muted mb-0">(555) 123-4567</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-chat-fill text-primary display-5 mb-3"></i>
+                            <h3 class="h5">Live Chat</h3>
+                            <p class="text-muted mb-0">Available 9 AM - 5 PM EST</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Send us a message</h2>
+                    <form id="contactForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="message" class="form-label">Message</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- FAQ Link -->
+            <div class="text-center mt-5">
+                <p class="text-muted mb-3">Looking for quick answers?</p>
+                <a href="{{ url_for('static_pages.faq') }}" class="btn btn-outline-primary">Visit our FAQ</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Thank you for your message. Our support team will get back to you soon.');
+    this.reset();
+});
+</script>
+{% endblock %}
+
+{% endblock %}

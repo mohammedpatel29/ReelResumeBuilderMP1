@@ -1,0 +1,554 @@
+{% extends 'base.html' %}
+
+{% block title %}Teleprompter - Practice Your Script{% endblock %}
+
+{% block styles %}
+<style>
+.teleprompter-container {
+    position: relative;
+    height: 400px;
+    background-color: var(--bg-color, #000000);
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.teleprompter-text {
+    padding: 20px;
+    color: var(--text-color, #ffffff);
+    font-size: 24px;
+    line-height: var(--line-spacing, 1.6);
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    transform: translateY(0);
+    will-change: transform;
+    transition: opacity 0.2s ease-out;
+}
+
+.section-title, .section-content {
+    margin-bottom: 1rem;
+}
+
+.mirror-text {
+    transform: scaleX(-1);
+}
+
+.countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 72px;
+    color: #ffffff;
+    display: none;
+    z-index: 10;
+}
+
+.loading-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #ffffff;
+    display: none;
+}
+
+.loading-bar {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-bottom: 10px;
+}
+
+.loading-progress {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s ease-out;
+}
+
+.loading-text {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.control-panel {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 100;
+}
+
+.control-panel.dark-theme {
+    background: rgba(33, 37, 41, 0.95);
+    color: #ffffff;
+}
+
+.control-panel.dark-theme label {
+    color: #ffffff;
+}
+
+.control-panel.dark-theme .text-muted {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group:last-child {
+    margin-bottom: 0;
+}
+
+#webcamPreview {
+    width: 100%;
+    border-radius: 8px;
+    background-color: #000;
+}
+
+.recording-indicator {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.recording-time {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="mb-4">
+                <h1 class="h3">Practice & Record Your Video Resume</h1>
+                <p class="text-muted">Use our teleprompter to practice and record your video resume. Adjust the settings to your preference.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body p-0 position-relative">
+                            <video id="webcamPreview" playsinline autoplay muted></video>
+                            <div class="recording-indicator d-none"></div>
+                            <div class="recording-time d-none">00:00</div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button class="btn btn-danger" id="recordBtn" disabled>
+                                <i class="fas fa-video"></i> Start Recording
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="teleprompter-container">
+                        <div class="countdown" id="countdown">3</div>
+                        <div class="loading-container" id="loadingContainer">
+                            <div class="loading-bar">
+                                <div class="loading-progress" id="loadingProgress"></div>
+                            </div>
+                            <div class="loading-text">Loading your script...</div>
+                        </div>
+                        <div class="teleprompter-text" id="prompterText" style="opacity: 0;">
+                            <div id="aiSuggestions" class="mb-4 d-none">
+                                <h3 class="section-title" style="color: var(--text-color);">AI-Suggested Talking Points</h3>
+                                <div id="aiTalkingPoints"></div>
+                            </div>
+                            
+                            {% if sections %}
+                                {% for section in sections %}
+                                    <div class="mb-4">
+                                        <h3 class="section-title" style="color: var(--text-color);">{{ section.section_type|title }}</h3>
+                                        <p class="section-content">{{ section.content }}</p>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No script content available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="control-group">
+                            <label for="speed" class="form-label">Scroll Speed (seconds)</label>
+                            <input type="range" class="form-range" id="speed" min="30" max="180" value="60">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Faster</span>
+                                <span class="text-muted">Slower</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="control-group">
+                            <label for="fontSize" class="form-label">Font Size</label>
+                            <input type="range" class="form-range" id="fontSize" min="16" max="36" value="24">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Smaller</span>
+                                <span class="text-muted">Larger</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="control-group">
+                            <label for="lineSpacing" class="form-label">Line Spacing</label>
+                            <input type="range" class="form-range" id="lineSpacing" min="1" max="2" step="0.1" value="1.6">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="control-group">
+                            <label for="theme" class="form-label">Theme</label>
+                            <select class="form-select" id="theme">
+                                <option value="dark">Dark Mode</option>
+                                <option value="light">Light Mode</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="mirrorMode">
+                            <label class="form-check-label" for="mirrorMode">
+                                Mirror Mode (for teleprompter hardware)
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="playPauseBtn">
+                                <i class="fas fa-play"></i> Start
+                            </button>
+                            <button class="btn btn-secondary" id="resetBtn">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.teleprompter-container');
+    const prompterText = document.getElementById('prompterText');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const speedControl = document.getElementById('speed');
+    const fontSizeControl = document.getElementById('fontSize');
+    const lineSpacingControl = document.getElementById('lineSpacing');
+    const themeSelect = document.getElementById('theme');
+    const mirrorToggle = document.getElementById('mirrorMode');
+    const countdown = document.getElementById('countdown');
+    const loadingContainer = document.getElementById('loadingContainer');
+    const loadingProgress = document.getElementById('loadingProgress');
+    const webcamPreview = document.getElementById('webcamPreview');
+    const recordBtn = document.getElementById('recordBtn');
+    const recordingIndicator = document.querySelector('.recording-indicator');
+    const recordingTime = document.querySelector('.recording-time');
+
+    let isPlaying = false;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recordingStartTime;
+    let recordingInterval;
+
+    // Theme control
+    function updateTextColors() {
+        const isDark = themeSelect.value === 'dark';
+        container.style.setProperty('--bg-color', isDark ? '#000000' : '#ffffff');
+        container.style.setProperty('--text-color', isDark ? '#ffffff' : '#000000');
+        document.querySelector('.control-panel').classList.toggle('dark-theme', isDark);
+        
+        // Update section titles color in teleprompter
+        const sectionTitles = document.querySelectorAll('.section-title');
+        sectionTitles.forEach(title => {
+            title.style.color = isDark ? '#ffffff' : '#000000';
+        });
+    }
+
+    // Initialize text display
+    function initializeText() {
+        prompterText.style.opacity = '1';
+        prompterText.style.transform = 'translateY(101%)';  // Start just below the container
+        
+        // Show loading progress
+        loadingContainer.style.display = 'block';
+        let progress = 0;
+        const loadingInterval = setInterval(() => {
+            progress += 10;
+            loadingProgress.style.width = `${progress}%`;
+            if (progress >= 100) {
+                clearInterval(loadingInterval);
+                loadingContainer.style.display = 'none';
+                // Ensure text is visible
+                prompterText.style.opacity = '1';
+                prompterText.style.transition = 'none';
+                prompterText.style.transform = 'translateY(101%)';
+            }
+        }, 100); // Complete loading in 1 second
+    }
+
+    // Fetch AI analysis talking points
+    fetch('/api/resume/latest-analysis')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.analysis.talking_points) {
+                const aiSuggestionsDiv = document.getElementById('aiSuggestions');
+                const talkingPointsDiv = document.getElementById('aiTalkingPoints');
+                
+                // Format talking points
+                const pointsList = document.createElement('ul');
+                data.analysis.talking_points.forEach(point => {
+                    const li = document.createElement('li');
+                    li.textContent = point;
+                    pointsList.appendChild(li);
+                });
+                
+                talkingPointsDiv.appendChild(pointsList);
+                aiSuggestionsDiv.classList.remove('d-none');
+            }
+        })
+        .catch(error => console.error('Error fetching AI analysis:', error));
+
+    // Initialize immediately when DOM loads
+    initializeText();
+
+    // Countdown before starting
+    function startCountdown() {
+        return new Promise((resolve) => {
+            countdown.style.display = 'block';
+            let count = 3;
+            
+            const interval = setInterval(() => {
+                countdown.textContent = count;
+                if (count === 0) {
+                    clearInterval(interval);
+                    countdown.style.display = 'none';
+                    resolve();
+                }
+                count--;
+            }, 1000);
+        });
+    }
+
+    let animationFrameId = null;
+    let startTime = null;
+    
+    function animate(currentTime) {
+        if (!startTime) startTime = currentTime;
+        if (!isPlaying) return;
+
+        const duration = speedControl.value * 1000; // Convert to milliseconds
+        const elapsed = currentTime - startTime;
+        
+        // Calculate total scroll distance (text height + container height)
+        const textHeight = prompterText.scrollHeight;
+        const containerHeight = container.clientHeight;
+        const totalDistance = textHeight;
+        
+        // Calculate scroll position based on elapsed time
+        const scrollDistance = (elapsed / duration) * totalDistance;
+        const yPos = containerHeight - scrollDistance;
+        
+        // Apply transform with smooth transition
+        prompterText.style.transition = 'transform 0.1s linear';
+        prompterText.style.transform = `translateY(${yPos}px)`;
+
+        // Check if we've reached the end
+        if (yPos + textHeight < 0) {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                recordBtn.click(); // Stop recording if it's still going
+            }
+        } else {
+            animationFrameId = requestAnimationFrame(animate);
+        }
+    }
+
+    // Initialize webcam
+    async function initializeWebcam() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: true,
+                audio: true
+            });
+            webcamPreview.srcObject = stream;
+            recordBtn.disabled = false;
+            
+            // Set up MediaRecorder
+            mediaRecorder = new MediaRecorder(stream);
+            
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const formData = new FormData();
+                formData.append('video', blob, 'recorded-video.webm');
+                formData.append('title', 'Recorded Video Resume');
+                formData.append('description', 'Video recorded using teleprompter');
+                
+                // Upload the recorded video
+                fetch('{{ url_for("video.upload") }}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        window.location.href = result.redirect_url;
+                    } else {
+                        alert('Error uploading video: ' + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error uploading video. Please try again.');
+                });
+            };
+            
+        } catch (error) {
+            console.error('Error accessing webcam:', error);
+            alert('Unable to access webcam. Please ensure you have granted camera permissions.');
+        }
+    }
+
+    // Initialize recording time display
+    function updateRecordingTime() {
+        const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+        const seconds = (elapsed % 60).toString().padStart(2, '0');
+        recordingTime.textContent = `${minutes}:${seconds}`;
+    }
+
+    // Handle recording
+    recordBtn.addEventListener('click', () => {
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            // Start recording
+            recordedChunks = [];
+            mediaRecorder.start();
+            recordBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Recording';
+            recordBtn.classList.replace('btn-danger', 'btn-warning');
+            recordingIndicator.classList.remove('d-none');
+            recordingTime.classList.remove('d-none');
+            
+            recordingStartTime = Date.now();
+            recordingInterval = setInterval(updateRecordingTime, 1000);
+            
+            // Auto-start teleprompter
+            if (!isPlaying) {
+                playPauseBtn.click();
+            }
+        } else {
+            // Stop recording
+            mediaRecorder.stop();
+            clearInterval(recordingInterval);
+            recordBtn.innerHTML = '<i class="fas fa-video"></i> Start Recording';
+            recordBtn.classList.replace('btn-warning', 'btn-danger');
+            recordingIndicator.classList.add('d-none');
+            recordingTime.classList.add('d-none');
+            
+            // Stop teleprompter
+            if (isPlaying) {
+                playPauseBtn.click();
+            }
+        }
+    });
+
+    // Play/Pause control with countdown
+    playPauseBtn.addEventListener('click', async () => {
+        if (!isPlaying) {
+            initializeText();
+            await startCountdown();
+            isPlaying = true;
+            startTime = null;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            animationFrameId = requestAnimationFrame(animate);
+        } else {
+            isPlaying = false;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+        }
+    });
+
+    // Reset control
+    resetBtn.addEventListener('click', () => {
+        isPlaying = false;
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        startTime = null;
+        prompterText.style.transform = 'translateY(101%)';
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+    });
+
+    // Add event listeners for all controls
+    speedControl.addEventListener('input', () => {});
+    fontSizeControl.addEventListener('input', () => {
+        prompterText.style.fontSize = `${fontSizeControl.value}px`;
+    });
+    lineSpacingControl.addEventListener('input', () => {
+        prompterText.style.lineHeight = lineSpacingControl.value;
+    });
+    themeSelect.addEventListener('change', updateTextColors);
+    mirrorToggle.addEventListener('change', () => {
+        prompterText.classList.toggle('mirror-text', mirrorToggle.checked);
+    });
+
+    // Initialize webcam when page loads
+    initializeWebcam();
+
+    // Ensure initial theme is set
+    updateTextColors();
+    
+    // Ensure teleprompter state is properly initialized
+    prompterText.style.opacity = '1';
+    prompterText.style.transform = 'translateY(101%)';
+});
+</script>
+{% endblock %}

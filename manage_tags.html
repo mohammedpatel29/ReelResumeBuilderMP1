@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Tags{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-transparent py-3">
+                    <h1 class="h3 mb-0">Manage Tags</h1>
+                </div>
+                <div class="card-body">
+                    <!-- Add New Tag Form -->
+                    <form id="addTagForm" class="mb-4">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="tagName" name="tag_name" 
+                                       placeholder="Enter new tag" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-select" id="tagType" name="tag_type">
+                                    <option value="skill">Skill</option>
+                                    <option value="industry">Industry</option>
+                                    <option value="role">Role</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-primary w-100">Add</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Current Tags -->
+                    <h2 class="h5 mb-3">Your Tags</h2>
+                    <div class="mb-4" id="userTags">
+                        {% if user_tags %}
+                            {% for tag in user_tags %}
+                                <span class="badge bg-primary me-2 mb-2" data-tag-id="{{ tag.id }}">
+                                    {{ tag.name }}
+                                    <button type="button" class="btn-close btn-close-white ms-2" 
+                                            onclick="removeTag({{ tag.id }})" aria-label="Remove"></button>
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No tags added yet.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- AI Suggested Tags -->
+                    {% if ai_suggested_tags %}
+                    <h2 class="h5 mb-3">Suggested Tags</h2>
+                    <div class="mb-4" id="suggestedTags">
+                        {% for tag, count in ai_suggested_tags %}
+                            <span class="badge bg-info me-2 mb-2 suggested-tag" 
+                                  data-tag-id="{{ tag.id }}" onclick="addSuggestedTag({{ tag.id }})">
+                                {{ tag.name }}
+                                <span class="badge bg-light text-dark ms-1">{{ count }}</span>
+                            </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Tips for Using Tags</h2>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success me-2"></i>
+                            Use relevant skills and industry terms
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success me-2"></i>
+                            Add your role and experience level
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success me-2"></i>
+                            Include certifications and tools
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Tag Management State
+const tagState = {
+    userTags: new Set({% if user_tags %}[{% for tag in user_tags %}{{ tag.id }}{% if not loop.last %},{% endif %}{% endfor %}]{% else %}[]{% endif %}),
+
+    addTag(tagId) {
+        this.userTags.add(tagId);
+        return this.userTags.size;
+    },
+
+    removeTag(tagId) {
+        this.userTags.delete(tagId);
+        return this.userTags.size;
+    },
+
+    hasTag(tagId) {
+        return this.userTags.has(tagId);
+    },
+
+    getTags() {
+        return Array.from(this.userTags);
+    }
+};
+
+// Add new tag
+document.getElementById('addTagForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch('{{ url_for("video.add_tag") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token() }}',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(formData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            const tagsContainer = document.getElementById('userTags');
+            const newTag = document.createElement('span');
+            newTag.className = 'badge bg-primary me-2 mb-2';
+            newTag.dataset.tagId = data.tag.id;
+            newTag.innerHTML = `
+                ${data.tag.name}
+                <button type="button" class="btn-close btn-close-white ms-2" 
+                        onclick="removeTag(${data.tag.id})" aria-label="Remove"></button>
+            `;
+            tagsContainer.appendChild(newTag);
+            tagState.addTag(data.tag.id);
+
+            // Clear input
+            document.getElementById('tagName').value = '';
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while adding the tag');
+    }
+});
+
+// Save video tags
+async function saveVideoTags(videoId, tags) {
+    try {
+        const response = await fetch(`/video/${videoId}/tags`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ tags: tags })
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to save tags');
+        }
+        return data;
+    } catch (error) {
+        console.error('Error saving tags:', error);
+        throw error;
+    }
+}
+
+// Add suggested tag
+async function addSuggestedTag(tagId) {
+    const tagElement = document.querySelector(`[data-tag-id="${tagId}"]`);
+    if (!tagElement) return;
+
+    try {
+        if (!tagState.hasTag(tagId)) {
+            tagState.addTag(tagId);
+            const tagsContainer = document.getElementById('userTags');
+            const newTag = document.createElement('span');
+            newTag.className = 'badge bg-primary me-2 mb-2';
+            newTag.dataset.tagId = tagId;
+            newTag.innerHTML = `
+                ${tagElement.textContent.trim().split('(')[0]}
+                <button type="button" class="btn-close btn-close-white ms-2" 
+                        onclick="removeTag(${tagId})" aria-label="Remove"></button>
+            `;
+            tagsContainer.appendChild(newTag);
+
+            if (typeof videoId !== 'undefined') {
+                await saveVideoTags(videoId, tagState.getTags());
+            }
+        }
+    } catch (error) {
+        console.error('Error adding suggested tag:', error);
+        alert('Failed to add tag');
+    }
+}
+
+// Remove tag
+async function removeTag(tagId) {
+    try {
+        const tagElement = document.querySelector(`[data-tag-id="${tagId}"]`);
+        if (tagElement) {
+            tagElement.remove();
+            tagState.removeTag(tagId);
+
+            if (typeof videoId !== 'undefined') {
+                await saveVideoTags(videoId, tagState.getTags());
+            }
+        }
+    } catch (error) {
+        console.error('Error removing tag:', error);
+        alert('Failed to remove tag');
+    }
+}
+</script>
+{% endblock %}

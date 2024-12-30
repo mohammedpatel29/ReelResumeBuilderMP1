@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Candidates - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Search Form -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <div class="search-controls mb-4">
+                <form class="d-flex flex-column" method="GET" action="{{ url_for('employer.search') }}">
+                    <div class="d-flex mb-3">
+                        <input type="text" name="q" class="form-control me-2" placeholder="Search candidates..." value="{{ query }}">
+                        <select name="sort" class="form-select me-2" style="width: auto;">
+                            <option value="recent" {% if sort_by == 'recent' %}selected{% endif %}>Most Recent</option>
+                            <option value="views" {% if sort_by == 'views' %}selected{% endif %}>Most Viewed</option>
+                            <option value="likes" {% if sort_by == 'likes' %}selected{% endif %}>Most Liked</option>
+                        </select>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                    <!-- Tag Filters -->
+                    <div class="tag-filters mb-3">
+                        <label class="fw-bold mb-2">Filter by Skills & Expertise:</label>
+                        <div class="d-flex flex-wrap gap-2" id="tagContainer">
+                            {% for tag in available_tags %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tags" value="{{ tag.name }}" 
+                                       id="tag{{ tag.id }}" {% if tag.name in selected_tags %}checked{% endif %}>
+                                <label class="form-check-label" for="tag{{ tag.id }}">
+                                    {{ tag.name }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Popular Tags Section -->
+                    <div class="popular-tags">
+                        <label class="fw-bold mb-2">Popular Tags:</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for tag in popular_tags %}
+                            <span class="badge bg-light text-dark border pointer-cursor tag-badge" 
+                                  onclick="toggleTag('{{ tag.name }}')">
+                                {{ tag.name }} ({{ tag.count }})
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results -->
+            {% if pagination.items %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+                {% for item in pagination.items %}
+                <div class="col">
+                    {% if item.__class__.__name__ == 'Video' %}
+                    <!-- Video Card -->
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="video-thumbnail-wrapper">
+                            <video playsinline
+                                   controls
+                                   data-plyr-config
+                                   id="video-{{ item.id }}"
+                                   poster="{{ url_for('video.get_thumbnail', filename=item.thumbnail) }}">
+                                <source src="{{ url_for('static', filename='uploads/videos/' + item.filename) }}" type="video/mp4">
+                                Your browser does not support HTML5 video.
+                            </video>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if item.user.profile_picture %}
+                                <img src="{{ url_for('static', filename='uploads/profile_pictures/' + item.user.profile_picture) }}"
+                                     class="rounded-circle me-2"
+                                     alt="{{ item.user.first_name }}"
+                                     style="width: 32px; height: 32px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
+                                     style="width: 32px; height: 32px;">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-0">{{ item.user.first_name }} {{ item.user.last_name }}</h6>
+                                    <small class="text-muted">{{ item.created_at.strftime('%B %d, %Y') }}</small>
+                                </div>
+                            </div>
+                            <h3 class="h6 mb-2">{{ item.title }}</h3>
+                            <p class="small text-muted mb-3">{{ item.description|default('')|truncate(100) }}</p>
+                            <!-- Video Tags -->
+                            <div class="video-tags mb-3">
+                                {% for tag in item.tags %}
+                                <span class="badge bg-light text-dark border">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="video-stats small text-muted">
+                                    <span class="me-2"><i class="bi bi-eye"></i> {{ item.views }}</span>
+                                    <span><i class="bi bi-heart"></i> {{ item.likes }}</span>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('video.view', video_id=item.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">View</a>
+                                    <a href="{{ url_for('messaging.new_message', receiver_id=item.user_id) }}" 
+                                       class="btn btn-sm btn-outline-secondary">Message</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Playlist Card -->
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if item.user.profile_picture %}
+                                <img src="{{ url_for('static', filename='uploads/profile_pictures/' + item.user.profile_picture) }}"
+                                     class="rounded-circle me-2"
+                                     alt="{{ item.user.first_name }}"
+                                     style="width: 32px; height: 32px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
+                                     style="width: 32px; height: 32px;">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-0">{{ item.user.first_name }} {{ item.user.last_name }}</h6>
+                                    <small class="text-muted">{{ item.created_at.strftime('%B %d, %Y') }}</small>
+                                </div>
+                            </div>
+                            <div class="playlist-icon mb-3 text-center">
+                                <i class="bi bi-collection-play display-4 text-primary"></i>
+                            </div>
+                            <h3 class="h6 mb-2">{{ item.title }}</h3>
+                            <p class="small text-muted mb-3">{{ item.description|default('')|truncate(100) }}</p>
+                            <!-- Playlist Tags -->
+                            <div class="playlist-tags mb-3">
+                                {% for tag in item.tags %}
+                                <span class="badge bg-light text-dark border">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="playlist-stats small text-muted">
+                                    <span class="me-2"><i class="bi bi-eye"></i> {{ item.view_count }}</span>
+                                    <span><i class="bi bi-collection"></i> {{ item.videos.count() }} videos</span>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('playlist.view_shared_playlist', share_token=item.share_token) }}" 
+                                       class="btn btn-sm btn-outline-primary">View Playlist</a>
+                                    <a href="{{ url_for('messaging.new_message', receiver_id=item.user_id) }}" 
+                                       class="btn btn-sm btn-outline-secondary">Message</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if pagination.pages > 1 %}
+            <nav aria-label="Search results pages">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('employer.search', q=query, sort=sort_by, page=pagination.prev_num, tags=selected_tags) }}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in pagination.iter_pages() %}
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('employer.search', q=query, sort=sort_by, page=page_num, tags=selected_tags) }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('employer.search', q=query, sort=sort_by, page=pagination.next_num, tags=selected_tags) }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <div class="rounded-circle bg-light d-inline-flex p-4 mb-3">
+                    <i class="bi bi-search display-4 text-muted"></i>
+                </div>
+                <h3 class="h5">No Results Found</h3>
+                <p class="text-muted">Try adjusting your search criteria or check back later for new candidates.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Video thumbnail optimization */
+.video-thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    background-color: #f8f9fa;
+    overflow: hidden;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin: 0;
+}
+
+.video-thumbnail-wrapper video {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+}
+
+/* Plyr specific overrides */
+.plyr {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+.plyr__video-wrapper {
+    height: 100% !important;
+    padding-top: 0 !important;
+}
+
+/* Card and layout improvements */
+.card {
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Tag styling */
+.tag-badge {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tag-badge:hover {
+    background-color: var(--bs-primary) !important;
+    color: white !important;
+}
+
+.video-tags .badge,
+.playlist-tags .badge {
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Playlist icon styling */
+.playlist-icon {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-controls {
+        flex-direction: column;
+    }
+
+    .search-controls .d-flex {
+        flex-wrap: wrap;
+    }
+
+    .search-controls .form-control,
+    .search-controls .form-select {
+        margin-bottom: 1rem;
+    }
+
+    .video-thumbnail-wrapper {
+        border-radius: 0.5rem;
+    }
+}
+</style>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        document.querySelectorAll('video[data-plyr-config]').forEach(video => {
+            PlyrManager.initialize(video);
+        });
+    }, 500);
+});
+
+window.addEventListener('beforeunload', function() {
+    PlyrManager.cleanupAll();
+});
+
+function toggleTag(tagName) {
+    const checkboxes = document.querySelectorAll('input[name="tags"]');
+    for (let checkbox of checkboxes) {
+        if (checkbox.value === tagName) {
+            checkbox.checked = !checkbox.checked;
+            break;
+        }
+    }
+    // Submit the form when a tag is toggled
+    document.querySelector('form').submit();
+}
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,67 @@
+<div class="qr-code-instructions">
+    <!-- Instructions Modal -->
+    <div class="modal fade" id="qrInstructionsModal" tabindex="-1" aria-labelledby="qrInstructionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="qrInstructionsModalLabel">How to Use QR Codes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="steps-container">
+                        <div class="step mb-4">
+                            <div class="step-number">1</div>
+                            <h6>Share Your Video</h6>
+                            <p>Click the "Share" button to open the sharing options.</p>
+                        </div>
+                        <div class="step mb-4">
+                            <div class="step-number">2</div>
+                            <h6>Access QR Code</h6>
+                            <p>The QR code will be displayed prominently in the share dialog.</p>
+                        </div>
+                        <div class="step mb-4">
+                            <div class="step-number">3</div>
+                            <h6>Save or Share QR Code</h6>
+                            <p>You can copy the QR code image or share the direct link with employers.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <h6>Track Engagement</h6>
+                            <p>Monitor views and engagement through your analytics dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="showShareDialog()">Try it Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.steps-container {
+    padding: 1rem;
+}
+
+.step {
+    position: relative;
+    padding-left: 3rem;
+}
+
+.step-number {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background: var(--bs-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+</style>

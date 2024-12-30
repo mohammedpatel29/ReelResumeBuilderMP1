@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Overview Stats -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-body p-4">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-eye-fill text-primary h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Total Views</h6>
+                            <h3 class="mb-0">{{ total_views|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-danger bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-heart-fill text-danger h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Total Likes</h6>
+                            <h3 class="mb-0">{{ total_likes|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-building-fill text-success h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Employer Views</h6>
+                            <h3 class="mb-0">{{ employer_views|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-bookmark-star-fill text-info h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Bookmarks</h6>
+                            <h3 class="mb-0">{{ employer_bookmarks|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Views Chart -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-header bg-transparent py-3">
+            <h5 class="mb-0">Views Over Time</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="viewsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Videos -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-transparent py-3">
+            <h5 class="mb-0">Top Performing Videos</h5>
+        </div>
+        <div class="card-body">
+            {% if top_videos %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Video Title</th>
+                            <th>Views</th>
+                            <th>Likes</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for video in top_videos %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('video.view', video_id=video.id) }}" class="text-decoration-none">
+                                    {{ video.title }}
+                                </a>
+                            </td>
+                            <td>{{ video.views }}</td>
+                            <td>{{ video.likes }}</td>
+                            <td>{{ video.created_at.strftime('%B %d, %Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <div class="rounded-circle bg-light d-inline-flex p-4 mb-3">
+                    <i class="bi bi-camera-reels text-muted display-4"></i>
+                </div>
+                <h3 class="h5">No Videos Yet</h3>
+                <p class="text-muted mb-0">Upload videos to see analytics</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('viewsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ view_dates | default([]) | tojson }},
+            datasets: [{
+                label: 'Daily Views',
+                data: {{ view_counts | default([]) | tojson }},
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

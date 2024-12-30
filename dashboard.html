@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}Employer Dashboard - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Overview Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-eye-fill text-primary h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Total Views</h6>
+                            <h3 class="mb-0">{{ stats.total_views }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-bookmark-star-fill text-success h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Bookmarks</h6>
+                            <h3 class="mb-0">{{ stats.bookmarks }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-envelope-fill text-info h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Messages</h6>
+                            <h3 class="mb-0">{{ stats.messages }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-body p-4">
+            <form action="{{ url_for('employer.search') }}" method="GET" class="row g-3">
+                <div class="col-lg-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="search" 
+                               class="form-control" 
+                               name="q" 
+                               placeholder="Search candidates by name or video title...">
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <select class="form-select" name="sort">
+                        <option value="recent">Most Recent</option>
+                        <option value="views">Most Viewed</option>
+                        <option value="likes">Most Liked</option>
+                    </select>
+                </div>
+                <div class="col-lg-1">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recent Videos -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-header bg-transparent py-3">
+            <h5 class="mb-0">Recent Video Resumes</h5>
+        </div>
+        <div class="card-body p-4">
+            {% if recent_videos %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for video in recent_videos %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="video-thumbnail-wrapper">
+                            <video playsinline
+                                   controls
+                                   data-plyr-config
+                                   id="video-{{ video.id }}"
+                                   poster="{{ url_for('video.get_thumbnail', filename=video.thumbnail) }}">
+                                <source src="{{ url_for('static', filename='uploads/videos/' + video.filename) }}" type="video/mp4">
+                                Your browser does not support HTML5 video.
+                            </video>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if video.user.profile_picture %}
+                                <img src="{{ url_for('static', filename='uploads/profile_pictures/' + video.user.profile_picture) }}"
+                                     class="rounded-circle me-2"
+                                     alt="{{ video.user.first_name }}"
+                                     style="width: 32px; height: 32px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
+                                     style="width: 32px; height: 32px;">
+                                    <i class="bi bi-person text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-0">{{ video.user.first_name }} {{ video.user.last_name }}</h6>
+                                    <small class="text-muted">{{ video.created_at.strftime('%B %d, %Y') }}</small>
+                                </div>
+                            </div>
+                            <h3 class="h6 mb-2">{{ video.title }}</h3>
+                            <p class="small text-muted mb-3">{{ video.description|default('')|truncate(100) }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="video-stats small text-muted">
+                                    <span class="me-2"><i class="bi bi-eye"></i> {{ video.views }}</span>
+                                    <span><i class="bi bi-heart"></i> {{ video.likes }}</span>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('video.view', video_id=video.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">View</a>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-secondary bookmark-btn"
+                                            data-jobseeker-id="{{ video.user.id }}"
+                                            data-bookmarked="{{ 'true' if video.user.id in bookmarked_jobseekers else 'false' }}">
+                                        <i class="bi bi-bookmark{% if video.user.id in bookmarked_jobseekers %}-fill{% endif %}"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <div class="rounded-circle bg-light d-inline-flex p-4 mb-3">
+                    <i class="bi bi-camera-reels text-muted display-4"></i>
+                </div>
+                <h3 class="h5">No Videos Available</h3>
+                <p class="text-muted mb-0">Check back later for new video resumes</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Video thumbnail optimization */
+.video-thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    background-color: #f8f9fa;
+    overflow: hidden;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin: 0;
+}
+
+.video-thumbnail-wrapper video {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+}
+
+/* Plyr specific overrides */
+.plyr {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+.plyr__video-wrapper {
+    height: 100% !important;
+    padding-top: 0 !important;
+}
+
+/* Card and layout improvements */
+.card {
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+</style>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        document.querySelectorAll('video[data-plyr-config]').forEach(video => {
+            PlyrManager.initialize(video);
+        });
+    }, 500);
+});
+
+window.addEventListener('beforeunload', function() {
+    PlyrManager.cleanupAll();
+});
+
+// Handle bookmark buttons
+document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', async function() {
+        const jobseekerId = this.dataset.jobseekerId;
+        try {
+            const response = await fetch(`/bookmark/${jobseekerId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const icon = this.querySelector('i');
+                if (data.status === 'bookmarked') {
+                    icon.classList.remove('bi-bookmark');
+                    icon.classList.add('bi-bookmark-fill');
+                    this.dataset.bookmarked = 'true';
+                } else {
+                    icon.classList.remove('bi-bookmark-fill');
+                    icon.classList.add('bi-bookmark');
+                    this.dataset.bookmarked = 'false';
+                }
+            }
+        } catch (error) {
+            console.error('Error updating bookmark:', error);
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

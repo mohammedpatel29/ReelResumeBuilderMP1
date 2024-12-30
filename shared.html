@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ playlist.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ playlist.title }}</h1>
+            <p class="lead">{{ playlist.description }}</p>
+            
+            <div class="text-muted mb-4">
+                <p>
+                    <i class="bi bi-eye-fill"></i> {{ playlist.view_count }} views
+                    {% if playlist.tags %}
+                    • Tags: 
+                    {% for tag in playlist.tags %}
+                    <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for video, order in playlist_videos %}
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="video-thumbnail-container">
+                            <img class="video-thumbnail" 
+                                 src="{{ url_for('static', filename='uploads/videos/' + video.filename) }}?t=0.1"
+                                 alt="{{ video.title }}"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ video.title }}</h5>
+                            <p class="card-text">{{ video.description }}</p>
+                            <div class="video-stats mb-3">
+                                <span class="me-3">
+                                    <i class="bi bi-eye-fill"></i> {{ video.views }}
+                                </span>
+                                <span>
+                                    <i class="bi bi-heart-fill"></i> {{ video.likes }}
+                                </span>
+                            </div>
+                            <a href="{{ url_for('video.view', video_id=video.id) }}" 
+                               class="btn btn-outline-primary">Watch Video</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not playlist_videos %}
+    <div class="text-center py-5">
+        <h3>No videos in this playlist</h3>
+        <p>This playlist is currently empty.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,535 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate Video Script{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+/* Progress Animation Styles */
+.progress-wrapper {
+    position: relative;
+    padding: 20px;
+}
+
+.progress {
+    height: 8px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(45deg, #4CAF50, #2196F3);
+    transition: width 0.5s ease;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255,255,255,0.15) 50%,
+        rgba(255,255,255,0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 30px 30px;
+    animation: progress-animation 2s linear infinite;
+}
+
+@keyframes progress-animation {
+    from { background-position: 0 0; }
+    to { background-position: 30px 0; }
+}
+
+.status-message {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 500;
+    color: #666;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.step.active {
+    opacity: 1;
+    color: #2196F3;
+}
+
+.step.completed {
+    opacity: 1;
+    color: #4CAF50;
+}
+
+.step-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+}
+
+.step.completed .step-icon {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    display: block;
+}
+
+/* Custom Styles */
+.upload-area {
+    border: 2px dashed var(--bs-gray-300);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: var(--bs-primary);
+    background-color: var(--bs-light);
+}
+
+.upload-icon {
+    transition: transform 0.3s ease;
+}
+
+.upload-area:hover .upload-icon {
+    transform: translateY(-5px);
+}
+
+.btn-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(var(--bs-primary-rgb), 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0);
+    }
+}
+
+/* Card Animation */
+.card {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* File Info Animation */
+#fileInfo {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+    }
+
+    .upload-area {
+        padding: 2rem !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <div class="max-w-3xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-3">Create Your Video Script</h1>
+            <p class="text-xl text-muted">Transform your resume into a compelling video script using AI</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card shadow-lg border-0">
+            <!-- Upload Section -->
+            <div class="card-body p-8">
+                <form id="scriptForm" action="{{ url_for('script.generate_script') }}" method="POST" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    <!-- Instructions -->
+                    <div class="mb-6 p-4 bg-light rounded-lg">
+                        <h3 class="h5 mb-3">How it works:</h3>
+                        <ol class="list-unstyled">
+                            <li class="mb-2 d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-2">1</span>
+                                Upload your resume (PDF, DOC, DOCX, or TXT format)
+                            </li>
+                            <li class="mb-2 d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-2">2</span>
+                                Our AI analyzes your professional experience
+                            </li>
+                            <li class="mb-2 d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-2">3</span>
+                                Get a personalized video script
+                            </li>
+                            <li class="mb-2 d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-2">4</span>
+                                Start recording your video resume
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Upload Area -->
+                    <div class="upload-container">
+                        <div id="dropArea" 
+                             class="border-2 border-dashed rounded-lg p-5 text-center upload-area">
+                            <div class="upload-content">
+                                <div class="upload-icon mb-4">
+                                    <i class="bi bi-cloud-arrow-up display-4 text-primary"></i>
+                                </div>
+                                <h3 class="h4 mb-3">Upload Your Resume</h3>
+                                <p class="text-muted mb-4">Drop your file here or click to browse</p>
+                                {{ form.resume(class="d-none", id="resumeFile") }}
+                                <button type="button" 
+                                        class="btn btn-outline-primary px-4 py-2"
+                                        onclick="document.getElementById('resumeFile').click()">
+                                    <i class="bi bi-folder me-2"></i>Browse Files
+                                </button>
+                                <p class="small text-muted mt-3">Supported formats: PDF, DOC, DOCX, TXT (Max 10MB)</p>
+                            </div>
+                        </div>
+                        <!-- Selected File Info -->
+                        <div id="fileInfo" class="d-none mt-4 p-4 bg-light rounded-lg">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                                    <span id="fileName" class="fw-medium"></span>
+                                </div>
+                                <button type="button" class="btn btn-link text-muted p-0" onclick="clearFile()">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Container -->
+                    <div id="progressContainer" class="d-none mt-4">
+                        <div class="p-4 bg-light rounded-lg">
+                            <!-- Step Indicators -->
+                            <div class="step-indicator">
+                                <div class="step" data-step="upload">
+                                    <div class="step-icon">
+                                        <i class="bi bi-cloud-upload"></i>
+                                    </div>
+                                    <span class="step-label">Upload</span>
+                                </div>
+                                <div class="step" data-step="analyze">
+                                    <div class="step-icon">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                    <span class="step-label">Analyze</span>
+                                </div>
+                                <div class="step" data-step="generate">
+                                    <div class="step-icon">
+                                        <i class="bi bi-gear"></i>
+                                    </div>
+                                    <span class="step-label">Generate</span>
+                                </div>
+                                <div class="step" data-step="complete">
+                                    <div class="step-icon">
+                                        <i class="bi bi-check"></i>
+                                    </div>
+                                    <span class="step-label">Complete</span>
+                                </div>
+                            </div>
+                            <!-- Progress Bar -->
+                            <div class="progress-wrapper">
+                                <div class="progress">
+                                    <div id="progressBar" 
+                                         class="progress-bar"
+                                         role="progressbar"
+                                         style="width: 0%">
+                                    </div>
+                                </div>
+                                <div id="generationStatus" class="status-message">
+                                    Preparing to process your resume...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="mt-6">
+                        <button type="submit" 
+                                id="generateButton" 
+                                class="btn btn-primary w-100 py-3 position-relative"
+                                disabled>
+                            <i class="bi bi-magic me-2"></i>Generate Video Script
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Error Alert -->
+                <div id="errorAlert" class="d-none mt-4">
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span id="errorMessage"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('resumeFile');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const generateButton = document.getElementById('generateButton');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const generationStatus = document.getElementById('generationStatus');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    const form = document.getElementById('scriptForm');
+
+    function initializeFileUpload() {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults);
+            document.body.addEventListener(eventName, preventDefaults);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight);
+        });
+
+        dropArea.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFiles);
+    }
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function highlight(e) {
+        dropArea.classList.add('border-primary');
+        dropArea.classList.add('bg-light');
+    }
+
+    function unhighlight(e) {
+        dropArea.classList.remove('border-primary');
+        dropArea.classList.remove('bg-light');
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles({ target: { files } });
+    }
+
+    function handleFiles(e) {
+        const files = e.target.files;
+        if (files.length) {
+            const file = files[0];
+            if (validateFile(file)) {
+                updateFileInfo(file);
+                enableGeneration();
+            }
+        }
+    }
+
+    function validateFile(file) {
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'text/plain'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            showError('Please upload a PDF, DOC, DOCX, or TXT file.');
+            return false;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            showError('File size should be less than 10MB.');
+            return false;
+        }
+
+        return true;
+    }
+
+    function updateFileInfo(file) {
+        fileName.textContent = file.name;
+        fileInfo.classList.remove('d-none');
+        errorAlert.classList.add('d-none');
+    }
+
+    function enableGeneration() {
+        generateButton.disabled = false;
+        generateButton.classList.add('btn-pulse');
+    }
+
+    window.clearFile = function() {
+        fileInput.value = '';
+        fileInfo.classList.add('d-none');
+        generateButton.disabled = true;
+        generateButton.classList.remove('btn-pulse');
+        errorAlert.classList.add('d-none');
+    };
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('d-none');
+        progressContainer.classList.add('d-none');
+        generateButton.disabled = true;
+    }
+
+    // Initialize
+    initializeFileUpload();
+
+    // Progress tracking functionality
+    const steps = ['upload', 'analyze', 'generate', 'complete'];
+    const statusMessages = {
+        'upload': 'Uploading your resume...',
+        'analyze': 'Analyzing resume content...',
+        'generate': 'Generating video script...',
+        'complete': 'Script generated successfully!'
+    };
+
+    function updateProgress(step, progress) {
+        // Update progress bar
+        progressBar.style.width = `${progress}%`;
+
+        // Update status message
+        generationStatus.textContent = statusMessages[step] || 'Processing...';
+
+        // Update step indicators
+        document.querySelectorAll('.step').forEach(stepEl => {
+            const stepName = stepEl.dataset.step;
+            const stepIndex = steps.indexOf(stepName);
+            const currentIndex = steps.indexOf(step);
+
+            stepEl.classList.remove('active', 'completed');
+
+            if (stepIndex < currentIndex) {
+                stepEl.classList.add('completed');
+            } else if (stepIndex === currentIndex) {
+                stepEl.classList.add('active');
+            }
+        });
+    }
+
+    // Enhanced form submission with progress tracking
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        generateButton.disabled = true;
+        errorAlert.classList.add('d-none');
+        progressContainer.classList.remove('d-none');
+
+        // Start with upload step
+        updateProgress('upload', 25);
+
+        try {
+            const formData = new FormData(form);
+
+            // Simulate file upload progress
+            setTimeout(() => updateProgress('analyze', 50), 1000);
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate script');
+            }
+
+            const result = await response.json();
+
+            if (result.error) {
+                throw new Error(result.error);
+            }
+
+            // Update progress for generation step
+            updateProgress('generate', 75);
+
+            // Complete generation and show success message
+            setTimeout(() => {
+                updateProgress('complete', 100);
+
+                // Show success message and redirect
+                setTimeout(() => {
+                    // Redirect to videos list page
+                    window.location.href = result.redirect_url;
+                }, 1500); // Give user time to see the completion status
+            }, 1000);
+
+        } catch (error) {
+            showError(error.message || 'An unexpected error occurred');
+            generateButton.disabled = false;
+            progressContainer.classList.add('d-none');
+        }
+    });
+});
+</script>
+{% endblock %}

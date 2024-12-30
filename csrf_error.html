@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Security Error{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h1 class="h4 mb-4">Security Error</h1>
+                    <p class="text-muted mb-4">{{ reason }}</p>
+                    <p class="text-muted mb-4">Please try again or return to the home page.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" onclick="window.history.back()">Go Back</button>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Home Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

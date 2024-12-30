@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="h2 mb-4">Frequently Asked Questions</h1>
+
+            <!-- FAQ Categories -->
+            <div class="row g-4 mb-5">
+                <div class="col-sm-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-person-video3 text-primary display-6 mb-3"></i>
+                            <h3 class="h5">For Job Seekers</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-building text-primary display-6 mb-3"></i>
+                            <h3 class="h5">For Employers</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-gear text-primary display-6 mb-3"></i>
+                            <h3 class="h5">Technical Support</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Accordion -->
+            <div class="accordion" id="faqAccordion">
+                <!-- For Job Seekers -->
+                <h2 class="h4 mb-3">For Job Seekers</h2>
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How do I make my video resume stand out?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <ul class="mb-0">
+                                <li>Keep it concise (2-3 minutes)</li>
+                                <li>Use professional lighting and audio</li>
+                                <li>Focus on your key achievements and skills</li>
+                                <li>Show your personality while maintaining professionalism</li>
+                                <li>Include a clear call-to-action</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- For Employers -->
+                <h2 class="h4 mb-3 mt-4">For Employers</h2>
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            How do I search for candidates?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <ol class="mb-0">
+                                <li>Use the search filters to narrow down candidates by skills and experience</li>
+                                <li>Browse video resumes in your industry</li>
+                                <li>Save promising candidates to your shortlist</li>
+                                <li>Contact candidates directly through our messaging system</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Support -->
+                <h2 class="h4 mb-3 mt-4">Technical Support</h2>
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            What are the supported video formats and file size limits?
+                        </button>
+                    </h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p class="mb-2">Supported video formats:</p>
+                            <ul class="mb-3">
+                                <li>MP4 (recommended)</li>
+                                <li>MOV</li>
+                                <li>AVI</li>
+                                <li>WEBM</li>
+                                <li>MKV</li>
+                            </ul>
+                            <p class="mb-0">Maximum file size: 500MB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Still Need Help -->
+            <div class="card border-0 shadow-sm mt-5">
+                <div class="card-body text-center p-4">
+                    <h3 class="h5 mb-3">Still Need Help?</h3>
+                    <p class="text-muted mb-3">Contact our support team for personalized assistance</p>
+                    <a href="{{ url_for('static_pages.contact') }}" class="btn btn-primary">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

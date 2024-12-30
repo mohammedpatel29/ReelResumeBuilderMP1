@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume Analysis{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4">Resume Analysis</h4>
+                    
+                    <div class="resume-upload mb-4">
+                        <h5 class="mb-3">Upload Resume</h5>
+                        <form id="resumeForm" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <label for="resume" class="form-label">Upload your resume for AI analysis</label>
+                                <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                                <div class="form-text">Upload your resume to get personalized insights and suggestions.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-magic me-2"></i>Analyze Resume
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Analysis Results -->
+                    <div id="analysisResults" class="d-none">
+                        <h5 class="mb-3">Analysis Results</h5>
+                        
+                        <!-- Key Points -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Key Points</h6>
+                            <ul id="keyPoints" class="list-unstyled"></ul>
+                        </div>
+
+                        <!-- Strengths -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Strengths</h6>
+                            <ul id="strengths" class="list-unstyled"></ul>
+                        </div>
+
+                        <!-- Areas for Improvement -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Areas for Improvement</h6>
+                            <ul id="improvements" class="list-unstyled"></ul>
+                        </div>
+
+                        <!-- Talking Points -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Key Talking Points</h6>
+                            <ul id="talkingPoints" class="list-unstyled"></ul>
+                        </div>
+
+                        <!-- Generated Script -->
+                        <div>
+                            <h6 class="fw-bold">Video Resume Script</h6>
+                            <div id="script" class="bg-light p-3 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const resumeForm = document.getElementById('resumeForm');
+    const analysisResults = document.getElementById('analysisResults');
+    
+    resumeForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch('/api/resume/analyze', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to analyze resume');
+            }
+            
+            if (data.success) {
+                displayResults(data.analysis);
+            }
+            
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+    
+    function displayResults(analysis) {
+        analysisResults.classList.remove('d-none');
+        
+        // Helper function to populate lists
+        function populateList(elementId, items) {
+            const ul = document.getElementById(elementId);
+            ul.innerHTML = items.map(item => `<li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>${item}</li>`).join('');
+        }
+        
+        // Populate all sections
+        populateList('keyPoints', analysis.key_points);
+        populateList('strengths', analysis.strengths);
+        populateList('improvements', analysis.improvements);
+        populateList('talkingPoints', analysis.talking_points);
+        
+        // Handle script display
+        const scriptDiv = document.getElementById('script');
+        scriptDiv.innerHTML = analysis.script.join('<br><br>');
+        
+        // Scroll to results
+        analysisResults.scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>
+{% endblock %}

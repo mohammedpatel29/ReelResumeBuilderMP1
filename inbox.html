@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages - Reel Resume{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-envelope-fill text-primary h4 mb-0"></i>
+                        </div>
+                        <h1 class="h5 mb-0">Messages</h1>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="nav nav-tabs" id="messagesTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" 
+                                    id="inbox-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#inbox" 
+                                    type="button">
+                                Inbox
+                                {% set unread_count = received_messages|selectattr('read', 'equalto', false)|list|length %}
+                                {% if unread_count > 0 %}
+                                <span class="badge bg-danger ms-2">{{ unread_count }}</span>
+                                {% endif %}
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" 
+                                    id="sent-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#sent" 
+                                    type="button">Sent</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="messagesTabContent">
+                        <div class="tab-pane fade show active" id="inbox">
+                            {% if received_messages %}
+                            <div class="list-group list-group-flush">
+                                {% for message in received_messages %}
+                                <a href="{{ url_for('messaging.view_message', message_id=message.id) }}" 
+                                   class="list-group-item list-group-item-action {% if not message.read %}unread{% endif %}">
+                                    <div class="d-flex align-items-center">
+                                        {% if message.sender.profile_picture %}
+                                        <img src="{{ url_for('static', filename='uploads/profile_pictures/' + message.sender.profile_picture) }}"
+                                             class="rounded-circle me-3"
+                                             alt="{{ message.sender.first_name }}"
+                                             style="width: 40px; height: 40px; object-fit: cover;">
+                                        {% else %}
+                                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+                                            <i class="bi bi-person text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h6 class="mb-0">{{ message.sender.first_name }} {{ message.sender.last_name }}</h6>
+                                                <small class="text-muted">{{ message.created_at.strftime('%B %d, %Y') }}</small>
+                                            </div>
+                                            <p class="mb-0 text-truncate">
+                                                <strong>{{ message.subject }}</strong> - 
+                                                {{ message.content|truncate(100) }}
+                                            </p>
+                                        </div>
+                                        {% if not message.read %}
+                                        <span class="badge bg-primary ms-2">New</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <div class="rounded-circle bg-light d-inline-flex p-4 mb-3">
+                                    <i class="bi bi-envelope text-muted display-4"></i>
+                                </div>
+                                <h3 class="h5">No Messages</h3>
+                                <p class="text-muted mb-0">Your inbox is empty</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="tab-pane fade" id="sent">
+                            {% if sent_messages %}
+                            <div class="list-group list-group-flush">
+                                {% for message in sent_messages %}
+                                <a href="{{ url_for('messaging.view_message', message_id=message.id) }}" 
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        {% if message.receiver.profile_picture %}
+                                        <img src="{{ url_for('static', filename='uploads/profile_pictures/' + message.receiver.profile_picture) }}"
+                                             class="rounded-circle me-3"
+                                             alt="{{ message.receiver.first_name }}"
+                                             style="width: 40px; height: 40px; object-fit: cover;">
+                                        {% else %}
+                                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+                                            <i class="bi bi-person text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h6 class="mb-0">To: {{ message.receiver.first_name }} {{ message.receiver.last_name }}</h6>
+                                                <small class="text-muted">{{ message.created_at.strftime('%B %d, %Y') }}</small>
+                                            </div>
+                                            <p class="mb-0 text-truncate">
+                                                <strong>{{ message.subject }}</strong> - 
+                                                {{ message.content|truncate(100) }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <div class="rounded-circle bg-light d-inline-flex p-4 mb-3">
+                                    <i class="bi bi-envelope text-muted display-4"></i>
+                                </div>
+                                <h3 class="h5">No Sent Messages</h3>
+                                <p class="text-muted mb-0">You haven't sent any messages yet</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.unread {
+    background-color: var(--bs-primary-bg-subtle);
+}
+</style>
+{% endblock %}

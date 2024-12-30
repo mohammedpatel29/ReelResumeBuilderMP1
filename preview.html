@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Preview Recording{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Step Progress -->
+            <div class="step-progress mb-4">
+                <div class="step-progress-bar">
+                    <div class="step-item completed">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Setup</div>
+                    </div>
+                    <div class="step-item completed">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Record</div>
+                    </div>
+                    <div class="step-item active">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Preview</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Interface -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Review Your Recording</h4>
+                        <a href="{{ url_for('video.record') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Recording
+                        </a>
+                    </div>
+
+                    <!-- Video Preview -->
+                    <div class="mb-4">
+                        <video id="previewVideo" class="w-100 rounded" controls>
+                            <source id="videoSource" type="video/webm">
+                            Your browser does not support the video element.
+                        </video>
+                    </div>
+
+                    <!-- Preview Message -->
+                    <div class="alert alert-info mb-4">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Review your recording before uploading. You can re-record if needed.
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{{ url_for('video.record', script_content=script_content) }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-repeat me-2"></i>Record Again
+                        </a>
+                        <button id="uploadButton" class="btn btn-primary btn-lg">
+                            <i class="bi bi-cloud-upload me-2"></i>Upload Video
+                        </button>
+                    </div>
+
+                    <!-- Upload Progress -->
+                    <div id="uploadProgress" class="mt-4 d-none">
+                        <div class="progress mb-2">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+                        </div>
+                        <p id="uploadStatus" class="text-muted small mb-0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.step-progress-bar {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.step-progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e0e0e0;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.step-item {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+    flex: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-weight: 600;
+}
+
+.step-item.active .step-circle {
+    border-color: var(--bs-primary);
+    background: var(--bs-primary);
+    color: #fff;
+}
+
+.step-item.completed .step-circle {
+    border-color: var(--bs-success);
+    background: var(--bs-success);
+    color: #fff;
+}
+</style>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const previewVideo = document.getElementById('previewVideo');
+    const videoSource = document.getElementById('videoSource');
+    const uploadButton = document.getElementById('uploadButton');
+    const retryButton = document.getElementById('retryButton');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressBar = uploadProgress.querySelector('.progress-bar');
+    const uploadStatus = document.getElementById('uploadStatus');
+
+    // Load the recorded video from session storage
+    const videoBase64 = sessionStorage.getItem('recordedVideoBase64');
+    if (videoBase64) {
+        videoSource.src = videoBase64;
+        previewVideo.load();
+    }
+
+    // Handle retry recording
+    retryButton.addEventListener('click', () => {
+        window.location.href = "{{ url_for('video.record') }}";
+    });
+
+    // Handle upload progress
+    function updateUploadProgress(progress) {
+        const progressBar = uploadProgress.querySelector('.progress-bar');
+        progressBar.style.width = `${progress}%`;
+        uploadStatus.textContent = `Uploading: ${progress}%`;
+    }
+
+    // Handle upload completion
+    function handleUploadComplete() {
+        uploadStatus.textContent = 'Upload completed successfully!';
+        setTimeout(() => {
+            uploadProgress.classList.add('d-none');
+        }, 3000);
+    }
+
+    // Handle upload error
+    function handleUploadError(error) {
+        uploadStatus.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                ${error.message || 'Upload failed. Please try again.'}
+            </div>
+        `;
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,1029 @@
+{% extends 'base.html' %}
+
+{% block title %}Record Video{% endblock %}
+
+{% block content %}
+<!-- Ensure CSRF token and QRCode.js are properly included -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-8 col-xl-9 col-lg-10">
+            <!-- Video Details Section -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">Video Details</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="videoTitle" class="form-label">Title <span class="text-danger">*</span></label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="videoTitle" 
+                                       name="title"
+                                       value="{{ video_title }}"
+                                       required
+                                       minlength="3"
+                                       placeholder="Enter video title">
+                                <div class="invalid-feedback">
+                                    Please provide a title (minimum 3 characters).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="videoDescription" class="form-label">Description <span class="text-danger">*</span></label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="videoDescription" 
+                                    name="description"
+                                    rows="1"
+                                    required
+                                    minlength="10"
+                                    placeholder="Enter video description">{{ video_description }}</textarea>
+                                <div class="invalid-feedback">
+                                    Please provide a description (minimum 10 characters).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recording Interface -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <!-- Alert for validation -->
+                    <div id="validationAlert" class="alert alert-danger d-none" role="alert">
+                        Please fill in all required fields before uploading.
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">Record Your Video</h4>
+
+                        <!-- Script Speed Controls -->
+                        <div class="script-controls">
+                            <label for="scriptSpeed" class="form-label me-2">Script Speed:</label>
+                            <select id="scriptSpeed" class="form-select form-select-sm d-inline-block" style="width: auto;">
+                                <option value="0.5">0.5x</option>
+                                <option value="0.75">0.75x</option>
+                                <option value="1" selected>1x</option>
+                                <option value="1.25">1.25x</option>
+                                <option value="1.5">1.5x</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Video Preview Container -->
+                    <div class="video-container position-relative mb-4">
+                        <!-- Live Preview -->
+                        <video id="preview" class="video-element rounded shadow-sm" autoplay muted playsinline></video>
+
+                        <!-- Recording Preview -->
+                        <video id="recordingPreview" class="video-element rounded shadow-sm d-none" controls playsinline></video>
+
+                        <!-- Camera Status -->
+                        <div id="cameraStatus" class="camera-status d-none">
+                            <div class="spinner-border text-light mb-2" role="status"></div>
+                            <p class="mb-0">Initializing camera...</p>
+                        </div>
+
+                        <!-- Recording Timer -->
+                        <div id="recordingTimer" class="recording-timer d-none">
+                            00:00
+                        </div>
+
+                        <!-- Teleprompter Overlay -->
+                        <div id="teleprompterOverlay" class="teleprompter-overlay d-none">
+                            <div class="teleprompter-wrapper">
+                                <div class="teleprompter-container">
+                                    <div class="teleprompter-content">
+                                        <div id="teleprompterText" class="script-content">
+                                            {{ script_content|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Script Display -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label mb-0">Your Script</label>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="toggleTeleprompter">
+                                <i class="bi bi-play-fill"></i> Start Teleprompter
+                            </button>
+                        </div>
+                        <textarea class="script-content-box form-control p-3 bg-light rounded border" 
+                                id="scriptContent" 
+                                name="script_content"
+                                rows="6"
+                                placeholder="Enter your script here">{{ script_content }}</textarea>
+                    </div>
+
+                    <!-- Recording Controls -->
+                    <div class="text-center">
+                        <!-- Recording Mode Buttons -->
+                        <div id="recordingControls" class="d-inline-block">
+                            <button id="startRecord" class="btn btn-primary btn-lg px-4" disabled>
+                                <i class="bi bi-record-circle me-2"></i>Start Recording
+                            </button>
+                            <button id="stopRecord" class="btn btn-danger btn-lg px-4 d-none">
+                                <i class="bi bi-stop-circle me-2"></i>Stop Recording
+                            </button>
+                        </div>
+
+                        <!-- Preview Mode Buttons -->
+                        <div id="previewControls" class="d-none">
+                            <button id="retakeVideo" class="btn btn-outline-secondary btn-lg px-4 me-2">
+                                <i class="bi bi-arrow-counterclockwise me-2"></i>Record Again
+                            </button>
+                            <button id="uploadVideo" class="btn btn-success btn-lg px-4">
+                                <i class="bi bi-cloud-upload me-2"></i>Use This Recording
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Indicator -->
+<div class="loading" id="uploadingIndicator">
+    <div class="loading-content">
+        <div class="spinner-border text-light mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5 class="text-white mb-2">Uploading your video...</h5>
+        <p class="text-white-50 mb-0">Please wait while we process your recording</p>
+    </div>
+</div>
+
+<!-- Share Success Modal -->
+<div class="modal fade" id="shareSuccessModal" tabindex="-1" aria-labelledby="shareSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="shareSuccessModalLabel">
+                    <i class="bi bi-check-circle-fill me-2"></i>Video Upload Successful!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="display-1 text-success mb-3">
+                        <i class="bi bi-share"></i>
+                    </div>
+                    <h4>Ready to Stand Out?</h4>
+                    <p class="lead">Your video resume is now ready to share!</p>
+                </div>
+
+                <div class="sharing-tips mb-4">
+                    <h6 class="mb-3">Pro Tips for Maximum Impact:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-1-circle-fill text-primary me-2"></i>
+                            Add your video link to job applications to stand out
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-2-circle-fill text-primary me-2"></i>
+                            Include your QR code on your printed resume
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-3-circle-fill text-primary me-2"></i>
+                            Share on LinkedIn to showcase your professional story
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sharing-options">
+                    <div class="mb-3">
+                        <label class="form-label">Your Video Link:</label>
+                        <div class="input-group">
+                            <input type="text" id="shareSuccessUrl" class="form-control" readonly>
+                            <button class="btn btn-outline-primary" onclick="copyShareSuccessUrl()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <div class="qr-code-wrapper">
+                            <div id="shareSuccessQrCode" class="d-inline-block p-2 bg-white rounded"></div>
+                            <div class="qr-code-brand">
+                                <div class="brand-overlay"></div>
+                                <img src="{{ url_for('static', filename='img/qr-logo.svg') }}" alt="Brand Logo" class="brand-logo">
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="downloadQRCode()">
+                                <i class="bi bi-download me-1"></i>Download QR Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('video.list_videos') }}" class="btn btn-primary">
+                    <i class="bi bi-collection-play me-1"></i>View All Videos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Video Container Styles */
+.video-container {
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    max-height: 720px;
+    width: 100%;
+    position: relative;
+}
+
+.video-element {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+}
+
+/* Camera Status Styles */
+.camera-status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+}
+
+/* Recording Timer Styles */
+.recording-timer {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-family: monospace;
+    font-size: 1.1rem;
+    z-index: 20;
+}
+
+/* Teleprompter Styles */
+.teleprompter-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.teleprompter-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teleprompter-container {
+    width: 80%;
+    height: 70%;
+    overflow: hidden;
+    position: relative;
+}
+
+.teleprompter-content {
+    width: 100%;
+    padding: 2rem;
+    color: white;
+    font-size: 24px;
+    line-height: 1.8;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    transform: translateY(0);
+    transition: transform 0.5s linear;
+}
+
+/* Script Content Box */
+.script-content-box {
+    white-space: pre-wrap;
+    font-size: 1rem;
+    line-height: 1.6;
+    min-height: 150px;
+    max-height: 300px;
+    resize: vertical;
+}
+
+/* Loading Indicator */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading.active {
+    display: flex;
+}
+
+.loading-content {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 8px;
+}
+
+/* Add to existing styles */
+.sharing-tips li {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.qr-code-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.qr-code-wrapper:hover {
+    transform: scale(1.02);
+}
+
+#shareSuccessQrCode {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#shareSuccessQrCode canvas {
+    border-radius: 12px;
+    display: block;
+}
+
+.qr-code-brand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 20%;
+    height: 20%;
+}
+
+.brand-overlay {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: white;
+    border-radius: 8px;
+    opacity: 0.85;
+}
+
+.brand-logo {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Button animations */
+.btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Loading state animation */
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: button-loading 0.8s ease infinite;
+}
+
+@keyframes button-loading {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Modal animations */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+/* Alert animations */
+.alert {
+    animation: slide-down 0.4s ease;
+}
+
+@keyframes slide-down {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* QR Code transitions */
+.qr-code-wrapper {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.qr-code-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.qr-code-brand {
+    transition: all 0.3s ease;
+}
+
+.qr-code-wrapper:hover .qr-code-brand {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Video container transitions */
+.video-container {
+    transition: box-shadow 0.3s ease;
+}
+
+.video-container:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Recording timer pulse animation */
+.recording-timer {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+/* Script content transitions */
+.script-content-box {
+    transition: all 0.3s ease;
+}
+
+.script-content-box:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Teleprompter overlay fade */
+.teleprompter-overlay {
+    transition: opacity 0.3s ease;
+}
+
+.teleprompter-overlay.d-none {
+    opacity: 0;
+}
+
+/* Loading spinner animations */
+.loading .spinner-border {
+    animation: spinner-grow 0.75s linear infinite;
+}
+
+@keyframes loading-fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.loading.active .loading-content {
+    animation: loading-fade 0.4s ease forwards;
+}
+
+/* Form validation animations */
+.form-control:focus {
+    transition: all 0.3s ease;
+    transform: translateY(-2px);
+}
+
+.invalid-feedback {
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // State management
+    const state = {
+        mediaRecorder: null,
+        recordedChunks: [],
+        stream: null,
+        isRecording: false,
+        recordingDuration: 0,
+        timerInterval: null,
+        recordedBlob: null,
+        teleprompter: {
+            isActive: false,
+            interval: null,
+            speed: 1,
+            content: document.getElementById('scriptContent').value
+        }
+    };
+
+    // Cache DOM elements
+    const elements = {
+        preview: document.getElementById('preview'),
+        recordingPreview: document.getElementById('recordingPreview'),
+        startRecord: document.getElementById('startRecord'),
+        stopRecord: document.getElementById('stopRecord'),
+        recordingTimer: document.getElementById('recordingTimer'),
+        teleprompterOverlay: document.getElementById('teleprompterOverlay'),
+        teleprompterText: document.getElementById('teleprompterText'),
+        toggleTeleprompter: document.getElementById('toggleTeleprompter'),
+        videoTitle: document.getElementById('videoTitle'),
+        videoDescription: document.getElementById('videoDescription'),
+        cameraStatus: document.getElementById('cameraStatus'),
+        uploadingIndicator: document.getElementById('uploadingIndicator'),
+        scriptSpeed: document.getElementById('scriptSpeed'),
+        teleprompterContent: document.querySelector('.teleprompter-content'),
+        recordingControls: document.getElementById('recordingControls'),
+        previewControls: document.getElementById('previewControls'),
+        retakeVideo: document.getElementById('retakeVideo'),
+        uploadVideo: document.getElementById('uploadVideo'),
+        scriptContent: document.getElementById('scriptContent'),
+        shareSuccessModal: document.getElementById('shareSuccessModal'),
+        shareSuccessUrl: document.getElementById('shareSuccessUrl'),
+        shareSuccessQrCode: document.getElementById('shareSuccessQrCode')
+
+    };
+
+    // Initialize teleprompter content
+    function initializeTeleprompter() {
+        if (elements.scriptContent && elements.teleprompterText) {
+            const content = elements.scriptContent.value;
+            elements.teleprompterText.innerHTML = content;
+            console.log('Teleprompter initialized with content:', content.substring(0, 100) + '...');
+        }
+    }
+
+    // Update teleprompter when script content changes
+    elements.scriptContent.addEventListener('input', function() {
+        if (elements.teleprompterText) {
+            elements.teleprompterText.innerHTML = this.value;
+            console.log('Teleprompter content updated');
+        }
+    });
+
+    // Teleprompter controls
+    function startTeleprompter() {
+        if (!elements.teleprompterContent || !elements.scriptSpeed) return;
+
+        const speed = parseFloat(elements.scriptSpeed.value);
+        const contentHeight = elements.teleprompterContent.scrollHeight;
+        const duration = contentHeight * (30 / speed); // Base scroll speed adjustment
+
+        console.log('Starting teleprompter with speed:', speed, 'content height:', contentHeight);
+
+        // Reset position before starting
+        elements.teleprompterContent.style.transition = 'none';
+        elements.teleprompterContent.style.transform = 'translateY(0)';
+
+        // Force reflow
+        elements.teleprompterContent.offsetHeight;
+
+        // Start animation
+        elements.teleprompterContent.style.transition = `transform ${duration}ms linear`;
+        elements.teleprompterContent.style.transform = `translateY(-${contentHeight}px)`;
+        state.teleprompter.isActive = true;
+        state.teleprompter.speed = speed;
+    }
+
+    function stopTeleprompter() {
+        if (!elements.teleprompterContent) return;
+
+        elements.teleprompterContent.style.transition = 'none';
+        elements.teleprompterContent.style.transform = 'translateY(0)';
+        state.teleprompter.isActive = false;
+    }
+
+    // UI state management
+    function showPreviewMode() {
+        elements.preview.classList.add('d-none');
+        elements.recordingPreview.classList.remove('d-none');
+        elements.recordingControls.classList.add('d-none');
+        elements.previewControls.classList.remove('d-none');
+        elements.teleprompterOverlay.classList.add('d-none');
+        stopTeleprompter();
+    }
+
+    function showRecordingMode() {
+        elements.preview.classList.remove('d-none');
+        elements.recordingPreview.classList.add('d-none');
+        elements.recordingControls.classList.remove('d-none');
+        elements.previewControls.classList.add('d-none');
+        state.recordedBlob = null;
+        state.recordedChunks = [];
+    }
+
+    // Upload function
+    let shareSuccessRedirectUrl = '';
+    async function uploadVideo() {
+        const title = elements.videoTitle.value.trim();
+        const description = elements.videoDescription.value.trim();
+
+        // Validate required fields
+        if (!title || !description) {
+            document.getElementById('validationAlert').classList.remove('d-none');
+            return;
+        }
+
+        if (!state.recordedBlob) {
+            alert('No video recorded. Please record a video first.');
+            return;
+        }
+
+        try {
+            document.getElementById('validationAlert').classList.add('d-none');
+            elements.uploadingIndicator.classList.add('active');
+
+            const formData = new FormData();
+            formData.append('video', state.recordedBlob, 'recorded_video.webm');
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('script_content', elements.scriptContent.value || '');
+            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').content);
+
+            const response = await fetch('/video/upload/new', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Upload failed');
+            }
+
+            if (result.redirect_url) {
+                // Instead of redirecting immediately, show the share modal
+                shareSuccessRedirectUrl = result.redirect_url;
+                const shareUrl = `${window.location.origin}${result.redirect_url}`;
+
+                // Set up share URL
+                document.getElementById('shareSuccessUrl').value = shareUrl;
+
+                // Generate QR Code
+                const qrContainer = document.getElementById('shareSuccessQrCode');
+                qrContainer.innerHTML = ''; // Clear existing content
+                new QRCode(qrContainer, {
+                    text: shareUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                // Show the modal
+                const shareSuccessModal = new bootstrap.Modal(document.getElementById('shareSuccessModal'));
+                shareSuccessModal.show();
+            } else {
+                throw new Error('Invalid server response');
+            }
+
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Failed to upload video: ' + error.message);
+        } finally {
+            elements.uploadingIndicator.classList.remove('active');
+        }
+    }
+
+    // Event Listeners
+    elements.startRecord.addEventListener('click', startRecording);
+    elements.stopRecord.addEventListener('click', stopRecording);
+    elements.retakeVideo.addEventListener('click', initializeCamera);
+    elements.uploadVideo.addEventListener('click', uploadVideo);
+
+    // Initialize camera
+    async function initializeCamera() {
+        try {
+            elements.cameraStatus.classList.remove('d-none');
+            elements.recordingPreview.classList.add('d-none');
+            elements.preview.classList.remove('d-none');
+
+            if (state.stream) {
+                state.stream.getTracks().forEach(track => track.stop());
+            }
+
+            state.stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: {
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+
+            elements.preview.srcObject = state.stream;
+            await elements.preview.play();
+
+            elements.startRecord.disabled = false;
+            elements.cameraStatus.classList.add('d-none');
+
+            // Show recording controls, hide preview controls
+            elements.recordingControls.classList.remove('d-none');
+            elements.previewControls.classList.add('d-none');
+        } catch (error) {
+            console.error('Camera error:', error);
+            elements.cameraStatus.innerHTML = `
+                <div class="alert alert-danger">
+                    Camera access failed. Please ensure:
+                    <br>- Camera permissions are granted
+                    <br>- No other app is using the camera
+                    <button onclick="location.reload()" class="btn btn-outline-danger mt-2">
+                        <i class="bi bi-arrow-clockwise"></i> Retry
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    // Recording functions
+    async function startRecording() {
+        if (!state.stream || state.isRecording) return;
+
+        try {
+            state.mediaRecorder = new MediaRecorder(state.stream, {
+                mimeType: 'video/webm;codecs=vp8,opus'
+            });
+
+            state.mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) {
+                    state.recordedChunks.push(event.data);
+                }
+            };
+
+            state.mediaRecorder.onstop = () => {
+                state.recordedBlob = new Blob(state.recordedChunks, { type: 'video/webm' });
+                elements.recordingPreview.src = URL.createObjectURL(state.recordedBlob);
+                showPreviewMode();
+            };
+
+            state.recordedChunks = [];
+            state.isRecording = true;
+            state.mediaRecorder.start(1000);
+
+            elements.startRecord.classList.add('d-none');
+            elements.stopRecord.classList.remove('d-none');
+            elements.recordingTimer.classList.remove('d-none');
+
+            startTimer();
+        } catch (error) {
+            console.error('Recording error:', error);
+            alert('Failed to start recording. Please try again.');
+        }
+    }
+
+    async function stopRecording() {
+        if (!state.mediaRecorder || !state.isRecording) return;
+
+        state.mediaRecorder.stop();
+        state.isRecording = false;
+        stopTimer();
+
+        elements.stopRecord.classList.add('d-none');
+        elements.recordingTimer.classList.add('d-none');
+    }
+
+    // Timer functions
+    function startTimer() {
+        state.recordingDuration = 0;
+        state.timerInterval = setInterval(() => {
+            state.recordingDuration++;
+            const minutes = Math.floor(state.recordingDuration / 60);
+            const seconds = state.recordingDuration % 60;
+            elements.recordingTimer.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (state.timerInterval) {
+            clearInterval(state.timerInterval);
+            state.timerInterval = null;
+        }
+    }
+
+    // Teleprompter toggle
+    elements.toggleTeleprompter.addEventListener('click', () => {
+        const teleprompterOverlay = elements.teleprompterOverlay;
+        if (!teleprompterOverlay) {
+            console.error('Teleprompter overlay not found');
+            return;
+        }
+
+        // Update content before showing
+        if (elements.teleprompterText) {
+            elements.teleprompterText.innerHTML = elements.scriptContent.value;
+        }
+
+        teleprompterOverlay.classList.toggle('d-none');
+        const isVisible = !teleprompterOverlay.classList.contains('d-none');
+
+        if (isVisible) {
+            startTeleprompter();
+            elements.toggleTeleprompter.innerHTML = '<i class="bi bi-stop-fill"></i> Stop Teleprompter';
+        } else {
+            stopTeleprompter();
+            elements.toggleTeleprompter.innerHTML = '<i class="bi bi-play-fill"></i> Start Teleprompter';
+        }
+    });
+
+    // Script speed change
+    elements.scriptSpeed.addEventListener('change', () => {
+        if (state.teleprompter.isActive) {
+            stopTeleprompter();
+            startTeleprompter();
+        }
+    });
+
+    // Initialize camera and teleprompter on page load
+    initializeCamera();
+    initializeTeleprompter();
+
+    //Helper functions for modal
+    window.copyShareSuccessUrl = function() {
+        const shareUrl = document.getElementById('shareSuccessUrl');
+        shareUrl.select();
+        document.execCommand('copy');
+
+        const copyButton = shareUrl.nextElementSibling;
+        const originalHTML = copyButton.innerHTML;
+        copyButton.innerHTML = '<i class="bi bi-check2"></i>';
+        setTimeout(() => {
+            copyButton.innerHTML = originalHTML;
+        }, 2000);
+    };
+
+    window.downloadQRCode = function() {
+        const qrCanvas = document.querySelector('#shareSuccessQrCode canvas');
+        const brandLogo = document.querySelector('.qr-code-brand img');
+
+        if (qrCanvas && brandLogo) {
+            // Create a temporary canvas
+            const tempCanvas = document.createElement('canvas');
+            const ctx = tempCanvas.getContext('2d');
+
+            // Add padding for rounded corners
+            const padding = 40;
+            tempCanvas.width = qrCanvas.width + (padding * 2);
+            tempCanvas.height = qrCanvas.height + (padding * 2);
+
+            // Draw white background with rounded corners
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, tempCanvas.width, tempCanvas.height, 12);
+            ctx.fill();
+
+            // Draw QR code in the center
+            ctx.drawImage(qrCanvas, padding, padding);
+
+            // Calculate logo position and size
+            const logoSize = Math.min(qrCanvas.width, qrCanvas.height) * 0.2;
+            const logoX = (tempCanvas.width - logoSize) / 2;
+            const logoY = (tempCanvas.height - logoSize) / 2;
+
+            // Draw white background for logo
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.roundRect(logoX, logoY, logoSize, logoSize, 8);
+            ctx.fill();
+
+            // Draw logo
+            ctx.drawImage(brandLogo, logoX, logoY, logoSize, logoSize);
+
+            // Create download link with timestamp
+            const timestamp = new Date().toISOString().slice(0, 10);
+            const link = document.createElement('a');
+            link.download = `video-resume-qr-${timestamp}.png`;
+            link.href = tempCanvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
+    // Add loading state to buttons
+    const addLoadingState = (button) => {
+        button.classList.add('loading');
+        button.disabled = true;
+        const originalText = button.innerHTML;
+        button.dataset.originalText = originalText;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+    };
+
+    const removeLoadingState = (button) => {
+        button.classList.remove('loading');
+        button.disabled = false;
+        button.innerHTML = button.dataset.originalText;
+    };
+
+    // Add loading states to upload and record buttons
+    document.getElementById('uploadVideo').addEventListener('click', function(e) {
+        addLoadingState(this);
+        // Original upload logic remains...
+    });
+
+    document.getElementById('startRecord').addEventListener('click', function(e) {
+        addLoadingState(this);
+        setTimeout(() => removeLoadingState(this), 1000); // Remove after camera initialization
+    });
+
+    // Smooth show/hide for teleprompter
+    const toggleTeleprompter = document.getElementById('toggleTeleprompter');
+    if (toggleTeleprompter) {
+        toggleTeleprompter.addEventListener('click', function() {
+            const overlay = document.getElementById('teleprompterOverlay');
+            if (overlay) {
+                overlay.style.display = overlay.classList.contains('d-none') ? 'flex' : 'none';
+                overlay.classList.toggle('d-none');
+            }
+        });
+    }
+
+    // Add loading animation to form submission
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const submitButton = form.querySelector('[type="submit"]');
+            if (submitButton) {
+                addLoadingState(submitButton);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

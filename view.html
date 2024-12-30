@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ playlist.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-8 col-md-7 mb-3">
+            <h1 class="h2">{{ playlist.title }}</h1>
+            <p class="lead">{{ playlist.description }}</p>
+
+            {% if tags %}
+            <div class="mb-3 tag-container">
+                {% for tag in tags %}
+                <span class="badge bg-secondary me-1 mb-1">
+                    {{ tag.name }}
+                    {% if current_user.id == playlist.user_id %}
+                    <button type="button" class="btn-close btn-close-white ms-2" 
+                            onclick="removeTag({{ playlist.id }}, {{ tag.id }})"
+                            style="font-size: 0.5rem;"
+                            aria-label="Remove tag"></button>
+                    {% endif %}
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% if current_user.id == playlist.user_id %}
+        <div class="col-lg-4 col-md-5 mb-3">
+            <div class="d-flex flex-wrap gap-2 justify-content-md-end justify-content-center">
+                <button class="btn btn-outline-primary" onclick="togglePublic({{ playlist.id }})">
+                    <i class="bi {% if playlist.is_public %}bi-unlock-fill{% else %}bi-lock-fill{% endif %}"></i>
+                    <span class="d-none d-sm-inline">{{ 'Make Private' if playlist.is_public else 'Make Public' }}</span>
+                </button>
+                {% if playlist.is_public %}
+                <a href="{{ url_for('playlist.get_playlist_qr', playlist_id=playlist.id) }}" 
+                   class="btn btn-outline-success" target="_blank">
+                    <i class="bi bi-qr-code"></i>
+                    <span class="d-none d-sm-inline">QR Code</span>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('playlist.edit_playlist', playlist_id=playlist.id) }}" 
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-pencil"></i>
+                    <span class="d-none d-sm-inline">Edit</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr class="my-4">
+
+    {% if current_user.id == playlist.user_id %}
+    <div class="row mb-4">
+        <div class="col-lg-8 col-md-7 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Add Video to Playlist</h5>
+                    <form action="{{ url_for('playlist.add_video', playlist_id=playlist.id) }}" 
+                          method="POST" class="row g-3">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="col-sm-8">
+                            {{ add_video_form.video_id(class="form-select") }}
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-primary w-100">Add Video</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Add Tags</h5>
+                    <form id="addTagForm" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="tagInput" 
+                                   name="tag_name" placeholder="Enter tag name" required>
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </form>
+                    <div id="tagFeedback" class="invalid-feedback" style="display: none;"></div>
+                    <button onclick="suggestTags({{ playlist.id }})" 
+                            class="btn btn-outline-secondary w-100"
+                            id="suggestTagsBtn">
+                        <i class="bi bi-lightbulb"></i> Suggest Tags
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row" id="playlist-videos">
+        {% for video, order in playlist_videos %}
+        <div class="col-12 mb-3" data-video-id="{{ video.id }}">
+            <div class="card h-100">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="video-thumbnail-container">
+                            <img src="{{ url_for('static', filename='uploads/videos/' + video.filename) }}?t=0.1" 
+                                 class="img-fluid rounded-start" alt="{{ video.title }}"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body d-flex flex-column h-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title">{{ video.title }}</h5>
+                                {% if current_user.id == playlist.user_id %}
+                                <form action="{{ url_for('playlist.remove_video', playlist_id=playlist.id, video_id=video.id) }}" 
+                                      method="POST" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                            <p class="card-text flex-grow-1">{{ video.description }}</p>
+                            <div class="mt-auto">
+                                <div class="video-stats mb-2">
+                                    <span class="me-3">
+                                        <i class="bi bi-eye-fill"></i> {{ video.views }}
+                                    </span>
+                                    <span>
+                                        <i class="bi bi-heart-fill"></i> {{ video.likes }}
+                                    </span>
+                                </div>
+                                <a href="{{ url_for('video.view', video_id=video.id) }}" 
+                                   class="btn btn-outline-primary">Watch Video</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not playlist_videos %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <h3>No videos in this playlist</h3>
+                {% if current_user.id == playlist.user_id %}
+                <p>Start adding videos to organize your content!</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+.video-thumbnail-container {
+    position: relative;
+    padding-top: 56.25%;
+    overflow: hidden;
+    border-radius: 0.375rem 0 0 0.375rem;
+}
+.video-thumbnail-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+@media (max-width: 768px) {
+    .video-thumbnail-container {
+        padding-top: 75%;
+        border-radius: 0.375rem 0.375rem 0 0;
+    }
+    .btn {
+        padding: 0.375rem 0.75rem;
+    }
+    .card-body {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    if (!csrfToken) {
+        console.error('CSRF token not found');
+        return;
+    }
+
+    // Initialize Sortable if we're on the owner's view
+    if (document.getElementById('playlist-videos') && {{ 'true' if current_user.id == playlist.user_id else 'false' }}) {
+        new Sortable(document.getElementById('playlist-videos'), {
+            animation: 150,
+            onEnd: function(evt) {
+                const videos = evt.to.children;
+                const order = {};
+                Array.from(videos).forEach((video, index) => {
+                    order[video.dataset.videoId] = index + 1;
+                });
+
+                fetch('{{ url_for("playlist.reorder_videos", playlist_id=playlist.id) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(order),
+                    credentials: 'same-origin'
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showFeedback('Failed to update video order. Please try again.', true);
+                });
+            }
+        });
+    }
+
+    // Set up tag form submission
+    const addTagForm = document.getElementById('addTagForm');
+    if (addTagForm) {
+        addTagForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            addTag({{ playlist.id }}, formData);
+        });
+    }
+});
+
+function showFeedback(message, isError = false) {
+    const feedback = document.getElementById('tagFeedback');
+    if (feedback) {
+        feedback.textContent = message;
+        feedback.className = isError ? 'invalid-feedback' : 'valid-feedback';
+        feedback.style.display = 'block';
+        setTimeout(() => {
+            feedback.style.display = 'none';
+        }, 3000);
+    }
+}
+
+function addTag(playlistId, formData) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    fetch(`/playlists/${playlistId}/tags`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add tag');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            throw new Error(data.message || 'Failed to add tag');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFeedback(error.message, true);
+    });
+}
+
+function suggestTags(playlistId) {
+    const button = document.getElementById('suggestTagsBtn');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
+    }
+
+    fetch(`/playlists/${playlistId}/suggest-tags`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to generate tags');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            throw new Error(data.message || 'No new tags generated');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFeedback(error.message, true);
+    })
+    .finally(() => {
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-lightbulb"></i> Suggest Tags';
+        }
+    });
+}
+
+function removeTag(playlistId, tagId) {
+    if (!confirm('Are you sure you want to remove this tag?')) return;
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    fetch(`/playlists/${playlistId}/tags/${tagId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to remove tag');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            throw new Error(data.message || 'Failed to remove tag');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFeedback(error.message, true);
+    });
+}
+
+function togglePublic(playlistId) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    fetch(`/playlists/${playlistId}/toggle-public`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to toggle visibility');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            throw new Error(data.message || 'Failed to toggle visibility');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFeedback('Failed to toggle playlist visibility. Please try again.', true);
+    });
+}
+</script>
+{% endblock %}

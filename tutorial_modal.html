@@ -1,0 +1,87 @@
+[Previous content remains the same until line 200]
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tutorialModal = new bootstrap.Modal(document.getElementById('tutorialModal'));
+    const carousel = document.getElementById('tutorialCarousel');
+    const progressBar = document.querySelector('.progress-bar');
+    const nextButton = document.querySelector('.modal-footer .btn-primary');
+    
+    {% if not current_user.has_seen_tutorial %}
+        tutorialModal.show();
+    {% endif %}
+    
+    // Initialize Plyr players for tutorial videos
+    setTimeout(() => {
+        document.querySelectorAll('.tutorial-video').forEach(video => {
+            const tutorialPlayerId = `tutorial-${video.id}`;
+            PlyrManager.initialize(video);
+        });
+    }, 500);
+
+    carousel.addEventListener('slide.bs.carousel', function(event) {
+        // Pause all videos when switching slides
+        document.querySelectorAll('.tutorial-video').forEach(video => {
+            const player = PlyrManager.players.get(video.id);
+            if (player) {
+                player.pause();
+            }
+        });
+        
+        const total = document.querySelectorAll('.carousel-item').length;
+        const current = event.to + 1;
+        progressBar.style.width = `${(current/total) * 100}%`;
+        
+        // Update button text on last slide
+        if (current === total) {
+            nextButton.textContent = 'Complete';
+        } else {
+            nextButton.textContent = 'Next';
+        }
+    });
+
+    // Cleanup players when modal is hidden
+    document.getElementById('tutorialModal').addEventListener('hidden.bs.modal', function() {
+        document.querySelectorAll('.tutorial-video').forEach(video => {
+            PlyrManager.cleanup(video.id);
+        });
+    });
+});
+
+function completeTutorial() {
+    const carousel = document.getElementById('tutorialCarousel');
+    const total = document.querySelectorAll('.carousel-item').length;
+    const current = [...carousel.querySelectorAll('.carousel-item')].findIndex(item => item.classList.contains('active')) + 1;
+    
+    if (current < total) {
+        carousel.querySelector('.carousel-control-next').click();
+    } else {
+        fetch('/tutorial/complete', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('tutorialModal')).hide();
+            }
+        });
+    }
+}
+
+function skipTutorial() {
+    if (confirm('Are you sure you want to skip the tutorial? You can always access it later from your profile settings.')) {
+        fetch('/tutorial/skip', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('tutorialModal')).hide();
+            }
+        });
+    }
+}
+</script>

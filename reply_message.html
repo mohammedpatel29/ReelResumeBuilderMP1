@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Reply to Message{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Reply to Message</h2>
+                    
+                    <div class="original-message mb-4 p-3 bg-light rounded">
+                        <h6>Original Message:</h6>
+                        <div class="mb-2">
+                            <strong>From:</strong> {{ original_message.sender.first_name }} {{ original_message.sender.last_name }}<br>
+                            <strong>Subject:</strong> {{ original_message.subject }}<br>
+                            <strong>Date:</strong> {{ original_message.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </div>
+                        <p class="mb-0" style="white-space: pre-wrap;">{{ original_message.content }}</p>
+                    </div>
+                    
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Your Reply:</label>
+                            <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Send Reply</button>
+                            <a href="{{ url_for('messaging.view_message', message_id=original_message.id) }}" 
+                               class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
